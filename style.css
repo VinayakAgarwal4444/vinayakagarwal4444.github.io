@@ -230,4 +230,8 @@ button:hover {
     transform: translateY(-10%);
     font-size: 80%;
   }
+
+  .row {
+    padding-right: 20px;
+  }
 }
