@@ -165,6 +165,10 @@ button:hover {
   }
   .carousel-caption {
     top: 45%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-10%);
+    font-size: 80%;
   }
 
   .carousel-caption h1 {
@@ -186,12 +190,20 @@ button:hover {
   }
 
   .carousel {
-    margin: -162px;
+    margin: -300px;
   }
 
   .projects h1 {
-    padding-top: 14rem;
+    padding-top: 21rem;
     padding-bottom: 2rem;
+  }
+
+  .navbar h2 {
+    font-size: 150%;
+  }
+
+  .navbar .toggler {
+    color: #726767;
   }
 }
 
@@ -201,6 +213,21 @@ button:hover {
   }
 
   .carousel {
-    margin: -162px;
+    margin: -300px;
+  }
+
+  .navbar h2 {
+    font-size: 100%;
+  }
+
+  .navbar .toggler {
+    color: #726767;
+  }
+
+  .carousel-caption {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-10%);
+    font-size: 80%;
   }
 }
