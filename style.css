@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,700');
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
+.navbar h2 {
+  color: rgb(116, 115, 115) !important;
+}
+
+.navbar-nav li {
+  padding-right: 20px;
+}
+
+.nav-link {
+  font-size: 1.5em !important;
+  color: rgb(116, 115, 115) !important;
+}
+
+.project-cards {
+  margin: 2%;
+}
+
+.navbar {
+  background: transparent !important;
+}
+
+.intro {
+  margin: -110px;
+}
+
+.carousel-inner img {
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-caption {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.carousel-caption h1 {
+  font-size: 500%;
+  text-shadow: 1px 1px 10px rgb(255, 255, 255);
+}
+
+.carousel-caption p {
+  font-size: 200%;
+  padding-bottom: 1rem;
+}
+
+.row {
+  padding-left: 20px;
+  padding-right: 10px;
+}
+
+.jumbotron {
+  background-image: url('img/backgd13.jpg');
+  background-size: cover;
+  color: aliceblue;
+}
+
+.jumbotron h1 {
+  font-size: 400%;
+}
+
+.jumbotron h2 {
+  font-size: 300%;
+}
+
+.jumbotron {
+  text-align: center;
+}
+
+.padding {
+  padding-bottom: 2em;
+}
+
+.projects h1 {
+  padding-top: 9rem;
+  padding-bottom: 2rem;
+}
+
+.social a {
+  font-size: 3.5rem;
+  padding: 3rem;
+}
+
+.fa-facebook,
+.fa-twitter,
+.fa-google-plus-g,
+.fa-instagram,
+.fa-youtube {
+  color: #000000;
+}
+
+.fa-facebook:hover,
+.fa-twitter:hover,
+.fa-google-plus-g:hover,
+.fa-instagram:hover,
+.fa-youtube:hover {
+  color: #726767;
+}
+
+.card {
+  width: 29%;
+  display: inline-block;
+  box-shadow: 2px 2px 20px black;
+  border-radius: 5px;
+  margin: 2%;
+}
+
+.image img {
+  width: 100%;
+}
+
+.title {
+  text-align: center;
+  padding: 10px;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+.des {
+  padding: 3px;
+  text-align: center;
+
+  padding-top: 5px;
+}
+button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  border: 1px solid black;
+  padding: 10px;
+}
+button:hover {
+  background-color: black;
+  color: white;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.connect h2 {
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+@media (max-width: 992px) {
+  .social a {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 45.5%;
+  }
+  .carousel-caption {
+    top: 45%;
+  }
+
+  .carousel-caption h1 {
+    font-size: 350%;
+  }
+
+  .carousel-caption p {
+    font-size: 140%;
+    padding-bottom: 0.2rem;
+  }
+
+  .carousel-caption h2 {
+    font-size: 100%;
+  }
+
+  .carousel-caption h5 {
+    font-size: 100%;
+    padding-bottom: 0.2rem;
+  }
+
+  .carousel {
+    margin: -162px;
+  }
+
+  .projects h1 {
+    padding-top: 14rem;
+    padding-bottom: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    width: 100%;
+  }
+
+  .carousel {
+    margin: -162px;
+  }
+}
