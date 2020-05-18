@@ -163,6 +163,7 @@ button:hover {
   .card {
     width: 45.5%;
   }
+
   .carousel-caption {
     top: 45%;
     position: absolute;
@@ -190,16 +191,16 @@ button:hover {
   }
 
   .carousel {
-    margin: -300px;
+    margin: -330px;
   }
 
   .projects h1 {
-    padding-top: 21rem;
+    padding-top: 23rem;
     padding-bottom: 2rem;
   }
 
   .navbar h2 {
-    font-size: 150%;
+    font-size: 90% !important;
   }
 
   .navbar .toggler {
@@ -213,7 +214,7 @@ button:hover {
   }
 
   .carousel {
-    margin: -300px;
+    margin: -350px;
   }
 
   .navbar h2 {
@@ -227,11 +228,15 @@ button:hover {
   .carousel-caption {
     position: absolute;
     top: 50%;
-    transform: translateY(-10%);
+    transform: translateY(-5%);
     font-size: 65%;
   }
 
   .row {
     padding-right: 20px;
+  }
+
+  .projects h1 {
+    padding-top: 25rem;
   }
 }
