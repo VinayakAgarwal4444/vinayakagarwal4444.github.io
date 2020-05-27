@@ -14,20 +14,18 @@
   </head>
 
   <body>
+    <div class="btns">
+      <div class="btn">
+        <button onclick="addNote()">New note</button>
+      </div>
 
-  <div class="btns">
-    <div class="btn">
-      <button onclick="addNote()">New note</button>
+      <div class="btn">
+        <button id="darkTheme" onclick="darkTheme()">Dark theme</button>
+      </div>
     </div>
-  
-
-    <div class="btn">
-      <button id="darkTheme" onclick="darkTheme()">Dark theme</button>
-    </div>
-  </div>
 
     <div id="noteWrapper">
-      <div class="notes">
+      <div class="notes"></div>
     </div>
   </body>
   <script src="./notemanager.js"></script>
