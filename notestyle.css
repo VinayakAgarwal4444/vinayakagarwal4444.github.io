@@ -1,0 +1,84 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.btn button {
+  color: white;
+  background: black;
+  border: none;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 30px;
+  outline: none;
+  cursor: pointer;
+  width: 400px;
+  border-radius: 8px;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  background-color: black;
+  border-radius: 8px;
+  width: 300px;
+
+  transition: all 0.5s;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.notes {
+  display: flex;
+  border-radius: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.note {
+  background-color: #e2c233;
+  border-radius: 8px;
+  width: 300px;
+  margin: 10px 10px 20px;
+  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s;
+  cursor: pointer;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.noteHeader {
+  padding: 10px 15px 0px;
+}
+
+.noteClose {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  line-height: 24px;
+  transition: 0.5s;
+  float: right;
+  padding-left: 12px;
+  background-color: #e2c233;
+  border: none;
+  outline: none;
+}
+
+.noteTitle,
+.noteBody {
+  outline: 0;
+}
+
+.noteTitle {
+  font-size: 24px;
+  padding: 20px 10px;
+}
+
+.noteBody {
+  font-size: 20px;
+  padding: 10px 15px 15px;
+}

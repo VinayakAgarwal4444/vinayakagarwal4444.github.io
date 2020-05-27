@@ -8,6 +8,16 @@ body {
   overflow-x: hidden;
 }
 
+a:link,
+a:visited {
+  text-decoration: none;
+  color: #000000;
+}
+
+a:hover {
+  color: white;
+}
+
 .navbar h2 {
   color: rgb(116, 115, 115) !important;
 }
