@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: #ebebe3;
+}
+
 .btn button {
   color: white;
   background: black;
@@ -29,6 +33,21 @@
   transition: all 0.5s;
   cursor: pointer;
   font-family: 'Courier New', Courier, monospace;
+}
+
+.btns button:hover {
+  background-color: rgb(75, 68, 68);
+  color: white;
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.btns {
+  display: flex;
+  border-radius: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto;
 }
 
 .notes {
@@ -73,6 +92,11 @@
   outline: 0;
 }
 
+.noteTitle:hover,
+.noteBody:hover {
+  color: #63686e;
+}
+
 .noteTitle {
   font-size: 24px;
   padding: 20px 10px;
@@ -82,3 +106,5 @@
   font-size: 20px;
   padding: 10px 15px 15px;
 }
+
+button: #darkTheme;
