@@ -28,6 +28,8 @@ window.addEventListener('load', () => {
           temperatureDegree.textContent = temperature;
           temperatureDescription.textContent = summary;
           locationTimezone.textContent = data.timezone;
+          temperatureSpan.textContent = 'F';
+          temperatureDegree.textContent = temperature;
           //celsius
           let celsius = (temperature - 32) * (5 / 9);
 
