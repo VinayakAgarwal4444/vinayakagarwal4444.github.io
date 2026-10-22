@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Case study: a six-page Power BI sales dashboard. How the model, DAX and report were built, and what the data says."
+    />
+    <title>Retail Sales Dashboard · Vinayak Agarwal</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('theme');
+        if (t) document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html#projects">← All projects</a>
+      <nav class="case-nav" aria-label="Case study">
+        <a href="#glance">Overview</a>
+        <a href="#build">How</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#findings">Findings</a>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero case-hero">
+        <p class="eyebrow">Case study · Power BI</p>
+        <h1>Retail Sales Dashboard</h1>
+        <p class="lead">
+          Fifteen months of sales from four stores and five products, turned into a
+          six-page Power BI report that answers five business questions: how much we
+          sold, what sold, where, to whom, and when it went well or badly.
+        </p>
+        <ul class="tags">
+          <li>Power BI</li>
+          <li>DAX</li>
+          <li>Star schema</li>
+          <li>Time intelligence</li>
+          <li>Data storytelling</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="powerbi/sales-dashboard.pbix" download>Download .pbix</a>
+          <a class="btn" href="#findings">Jump to findings</a>
+        </div>
+        <dl class="meta">
+          <div><dt>Period</dt><dd>Jan 2022 – Mar 2023</dd></div>
+          <div><dt>Model</dt><dd>5 tables · 4 relationships</dd></div>
+          <div><dt>Logic</dt><dd>24 DAX measures</dd></div>
+          <div><dt>Report</dt><dd>6 pages · 75 visuals</dd></div>
+        </dl>
+        <figure class="shot hero-shot">
+          <button type="button" class="zoom" data-src="img/sales-dashboard/1-executive-overview.png">
+            <img
+              src="img/sales-dashboard/1-executive-overview.png"
+              alt="Executive Overview page: five KPI cards, slicers, monthly sales line, category donut and bar charts by store, region and product."
+              width="1280"
+              height="720"
+            />
+          </button>
+        </figure>
+      </section>
+
+      <!-- 01 AT A GLANCE -->
+      <section id="glance" class="section">
+        <p class="kicker">01 · At a glance</p>
+        <h2>The short version</h2>
+        <div class="trio">
+          <div>
+            <h3>The question</h3>
+            <p>
+              Where does the revenue actually come from, and is the business growing?
+              The brief asked for totals by region, units by product, transactions by
+              store and demographic, and the best and worst performers over time.
+            </p>
+          </div>
+          <div>
+            <h3>What I did</h3>
+            <p>
+              Modelled the data as a star schema with a full calendar table, and wrote 24
+              measures. The best/worst ones recalculate whenever you change a slicer.
+              Then I laid the answers out across five themed pages plus a written
+              summary page.
+            </p>
+          </div>
+          <div>
+            <h3>What I found</h3>
+            <p>
+              Electronics earns 81% of revenue on 60% of units. Price, not demand,
+              decides the product ranking. And the headline “2023 is down 75%” is a
+              trap: like for like, Q1 2023 is down 8.1%.
+            </p>
+          </div>
+        </div>
+
+        <ul class="stats">
+          <li><strong>$14.4M</strong><span>Total sales</span></li>
+          <li><strong>8,013</strong><span>Units sold</span></li>
+          <li><strong>2,287</strong><span>Transactions</span></li>
+          <li><strong>$6,317</strong><span>Average sale</span></li>
+          <li><strong>36</strong><span>Customers</span></li>
+          <li><strong>−8.1%</strong><span>Q1 2023 vs Q1 2022</span></li>
+        </ul>
+      </section>
+
+      <!-- 02 BRIEF -->
+      <section id="brief" class="section">
+        <p class="kicker">02 · The brief</p>
+        <h2>Five business questions</h2>
+        <p class="lead">
+          Every page in the report exists to answer one of these. The last page
+          answers all five in plain sentences, with every number traceable back to a
+          measure.
+        </p>
+        <ol class="questions">
+          <li><b>Q1</b> What are total sales, and how do they split by region?</li>
+          <li><b>Q2</b> What is the total quantity sold, by category and by product?</li>
+          <li><b>Q3</b> How many transactions were there, by store and by customer demographic?</li>
+          <li><b>Q4</b> What performed best, and when?</li>
+          <li><b>Q5</b> What performed worst, and when?</li>
+        </ol>
+      </section>
+
+      <!-- 03 DATA MODEL -->
+      <section id="model" class="section">
+        <p class="kicker">03 · Data model</p>
+        <h2>A small, clean star schema</h2>
+        <div class="split">
+          <figure class="diagram">
+            <svg viewBox="0 0 460 320" role="img" aria-labelledby="schema-title">
+              <title id="schema-title">
+                Star schema: the Sales fact table in the centre, joined many-to-one to
+                Customers, Products, Stores and Date.
+              </title>
+              <g class="links">
+                <line x1="230" y1="160" x2="90" y2="60" />
+                <line x1="230" y1="160" x2="370" y2="60" />
+                <line x1="230" y1="160" x2="90" y2="260" />
+                <line x1="230" y1="160" x2="370" y2="260" />
+              </g>
+              <g class="node">
+                <rect x="20" y="30" width="140" height="60" rx="10" />
+                <text x="90" y="56">Customers</text>
+                <text x="90" y="75" class="sub">36 rows · 1</text>
+              </g>
+              <g class="node">
+                <rect x="300" y="30" width="140" height="60" rx="10" />
+                <text x="370" y="56">Products</text>
+                <text x="370" y="75" class="sub">5 rows · 1</text>
+              </g>
+              <g class="node">
+                <rect x="20" y="230" width="140" height="60" rx="10" />
+                <text x="90" y="256">Stores</text>
+                <text x="90" y="275" class="sub">4 rows · 1</text>
+              </g>
+              <g class="node">
+                <rect x="300" y="230" width="140" height="60" rx="10" />
+                <text x="370" y="256">Date</text>
+                <text x="370" y="275" class="sub">730 rows · 1</text>
+              </g>
+              <g class="node fact">
+                <rect x="160" y="125" width="140" height="70" rx="10" />
+                <text x="230" y="155">Sales</text>
+                <text x="230" y="175" class="sub">2,287 rows · many</text>
+              </g>
+            </svg>
+          </figure>
+          <div>
+            <p>
+              One fact table, <code>Sales</code>, holds a row per transaction: who
+              bought, what, where, when, how many and at what price. Four dimension
+              tables describe each of those keys. All four relationships are
+              single-direction, many-to-one, so a slicer on any dimension filters the
+              fact table and nothing filters back the wrong way.
+            </p>
+            <table class="spec">
+              <thead>
+                <tr><th>Table</th><th>Rows</th><th>Key columns</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Sales</td><td>2,287</td><td>Customer ID, Product ID, Store ID, Sale Date, Quantity, Price</td></tr>
+                <tr><td>Customers</td><td>36</td><td>Age, Age Band, Gender, Occupation, City, Region</td></tr>
+                <tr><td>Products</td><td>5</td><td>Product Name, Category, List Price</td></tr>
+                <tr><td>Stores</td><td>4</td><td>Store Name, Address, Latitude, Longitude</td></tr>
+                <tr><td>Date</td><td>730</td><td>Year, Quarter, Month, Week, Day of Week (15 columns)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 HOW IT WAS BUILT -->
+      <section id="build" class="section">
+        <p class="kicker">04 · Methodology</p>
+        <h2>How it was built</h2>
+        <p class="lead">Five steps. Pick one to see the detail.</p>
+
+        <div class="steps" data-tabs>
+          <div class="step-tabs" role="tablist" aria-label="Build steps">
+            <button role="tab" aria-selected="true" aria-controls="step-1" id="tab-1"><b>01</b> Prepare</button>
+            <button role="tab" aria-selected="false" aria-controls="step-2" id="tab-2" tabindex="-1"><b>02</b> Date table</button>
+            <button role="tab" aria-selected="false" aria-controls="step-3" id="tab-3" tabindex="-1"><b>03</b> Measures</button>
+            <button role="tab" aria-selected="false" aria-controls="step-4" id="tab-4" tabindex="-1"><b>04</b> Design</button>
+            <button role="tab" aria-selected="false" aria-controls="step-5" id="tab-5" tabindex="-1"><b>05</b> Validate</button>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-1" aria-labelledby="tab-1">
+            <h3>Prepare and model the data</h3>
+            <p>
+              The source workbook had customers, products, stores and sales on
+              separate sheets. I loaded each into Power Query, set the data types
+              (integer keys, decimal prices, true dates) and kept the tables narrow
+              so each one does one job.
+            </p>
+            <ul>
+              <li>Used the <b>Age Band</b> column to group customers (25–34, 35–44, 45–54) rather than plotting every age.</li>
+              <li>Kept <b>Price</b> on every sale line instead of looking it up from Products, because the price paid can differ from the list price.</li>
+              <li>Joined the four dimensions to Sales on their IDs, many-to-one, single direction.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-2" aria-labelledby="tab-2" hidden>
+            <h3>Build a proper date table in DAX</h3>
+            <p>
+              Time intelligence functions like <code>TOTALYTD</code> and
+              <code>DATEADD</code> need a continuous date table with no gaps. The
+              Date table follows this <code>CALENDAR</code> + <code>GENERATE</code>
+              pattern and covers both full calendar years, one row per day, 730 in
+              all.
+            </p>
+<pre><code>Date =
+VAR DateList = CALENDAR ( DATE ( 2022, 1, 1 ), DATE ( 2023, 12, 31 ) )
+RETURN
+GENERATE (
+    DateList,
+    VAR d = [Date]
+    RETURN ROW (
+        "Month Number", MONTH ( d ),
+        "Month Name", FORMAT ( d, "MMM" ),
+        "Calendar Year", "CY " &amp; YEAR ( d ),
+        "Calendar Year Month Number", YEAR ( d ) * 100 + MONTH ( d ),
+        "Day of Week Number", WEEKDAY ( d, 2 ),   -- Monday = 1
+        "Quarter Name", FORMAT ( d, "\QQ" ),
+        "Week Number", WEEKNUM ( d )
+    )
+)</code></pre>
+            <p>
+              The numeric helper columns (like <code>Calendar Year Month Number</code>)
+              are there to sort the text labels, so “Feb 2022” comes after “Jan 2022”
+              and not after “Dec 2022”.
+            </p>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-3" aria-labelledby="tab-3" hidden>
+            <h3>Write the measures</h3>
+            <p>
+              All the logic lives in 24 explicit measures on the Sales table. No
+              visual relies on Power BI's automatic summing. They fall into four
+              groups:
+            </p>
+            <div class="measure-groups">
+              <div>
+                <h4>Core</h4>
+                <p>Total Sales · Total Qty · Number of Transactions · Avg Sales · Avg Qty per Transaction · Unique Customers</p>
+              </div>
+              <div>
+                <h4>Time intelligence</h4>
+                <p>YTD Sales · Comparable Sales · Last Year Sales · Vs Last Year Sales · Vs Last Year % · Weekend Sales %</p>
+              </div>
+              <div>
+                <h4>Share and rank</h4>
+                <p>Sales % of Total · Sales Rank</p>
+              </div>
+              <div>
+                <h4>Dynamic best / worst</h4>
+                <p>Best and Worst Product, Category, Store, Region and Month</p>
+              </div>
+            </div>
+<pre><code>Total Sales = SUMX ( Sales, Sales[Quantity] * Sales[Price] )
+
+Last Year Sales =
+VAR FirstSale = CALCULATE ( MIN ( Sales[Sale Date] ), REMOVEFILTERS () )
+VAR LastMonthEnd = EOMONTH ( CALCULATE ( MAX ( Sales[Sale Date] ), REMOVEFILTERS () ), 0 )
+-- only days that have data AND a full year of history behind them
+VAR Days = FILTER ( VALUES ( 'Date'[Date] ),
+    'Date'[Date] &lt;= LastMonthEnd &amp;&amp; EDATE ( 'Date'[Date], -12 ) &gt;= FirstSale )
+RETURN CALCULATE ( [Total Sales], REMOVEFILTERS ( 'Date' ), DATEADD ( Days, -1, YEAR ) )
+
+Best Product =
+VAR T = ADDCOLUMNS ( ALLSELECTED ( Products[Product Name] ), "@S", [Total Sales] )
+VAR R = TOPN ( 1, FILTER ( T, NOT ISBLANK ( [@S] ) ), [@S], DESC )
+RETURN CONCATENATEX ( R, Products[Product Name] &amp; " (" &amp; FORMAT ( [@S], "$#,0" ) &amp; ")", ", " )</code></pre>
+            <p>
+              The best/worst pattern is the one I'm happiest with.
+              <code>ALLSELECTED</code> keeps whatever the slicers have selected, so
+              filtering to the West region shows the West's best product, not the
+              overall winner. Swapping the column and the sort order gives the other
+              nine measures.
+            </p>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-4" aria-labelledby="tab-4" hidden>
+            <h3>Design the report</h3>
+            <p>
+              Six pages at 1280 × 720, all with the same layout: a title bar with a
+              one-line takeaway, a row of slicers and KPI cards, then charts that go
+              from general to specific.
+            </p>
+            <ul>
+              <li><b>Executive Overview</b>: headline KPIs and a chart of each dimension.</li>
+              <li><b>Products &amp; Categories</b>: revenue against units, side by side, to show the price effect.</li>
+              <li><b>Stores &amp; Geography</b>: store map by latitude/longitude, a store × category matrix.</li>
+              <li><b>Customer Demographics</b>: age band, gender, occupation and city.</li>
+              <li><b>Time Intelligence</b>: YTD, vs last year, best/worst month, day of week.</li>
+              <li><b>Answers</b>: the five questions answered in text, plus recommendations.</li>
+            </ul>
+            <p>
+              A ten-colour custom theme keeps each category the same colour across
+              every page, and each page's subtitle tells you what to notice before you
+              start reading the charts.
+            </p>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-5" aria-labelledby="tab-5" hidden>
+            <h3>Validate before quoting anything</h3>
+            <p>
+              Before writing the Answers page I checked every figure against the raw
+              rows, and that's where the most important finding came from.
+            </p>
+            <ul>
+              <li>
+                The data ends on <b>30 Mar 2023</b>. Full-year 2022 ($11.58M) against
+                2023 to date ($2.87M) looks like a 75% collapse. The fair comparison
+                is Q1 against Q1: <b>−8.1%</b>.
+              </li>
+              <li>
+                The first version of the “Vs Last Year” card made the same mistake.
+                With no year selected it compared all 15 months against 2022 and
+                showed <b>+24.8%</b>. I rewrote <code>Last Year Sales</code> to use
+                only days that have a year of history behind them, and added a
+                matching <code>Comparable Sales</code> measure. The card now reads
+                −8.1% with no year selected, and stays blank for 2022, which has no
+                prior year to compare against.
+              </li>
+              <li>
+                The date table runs to Dec 2023, so the blank months after March are
+                future dates, not missing data.
+              </li>
+              <li>
+                Each customer has a unique occupation and city in this dataset, so
+                those two charts mirror each other. I noted that on the page so
+                nobody reads it as two separate findings.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 DASHBOARD -->
+      <section id="dashboard" class="section">
+        <p class="kicker">05 · Visual analysis</p>
+        <h2>The dashboard, page by page</h2>
+        <p class="lead">Screenshots from Power BI Desktop. Click any one to see it full size.</p>
+
+        <div class="gallery">
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/sales-dashboard/1-executive-overview.png">
+              <img src="img/sales-dashboard/1-executive-overview.png" alt="Executive Overview page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Page 1 · Executive Overview</b> Five KPI cards, year / category / region slicers, the monthly trend and a breakdown of each dimension.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/sales-dashboard/2-products-categories.png">
+              <img src="img/sales-dashboard/2-products-categories.png" alt="Products and Categories page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Page 2 · Products &amp; Categories</b> Revenue and units side by side. Units are nearly flat; revenue isn't. A product scorecard ranks each line.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/sales-dashboard/3-stores-geography.png">
+              <img src="img/sales-dashboard/3-stores-geography.png" alt="Stores and Geography page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Page 3 · Stores &amp; Geography</b> Transactions, sales and average sale by store, a lat/long map sized by revenue, and a store × category matrix.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/sales-dashboard/4-customer-demographics.png">
+              <img src="img/sales-dashboard/4-customer-demographics.png" alt="Customer Demographics page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Page 4 · Customer Demographics</b> Sales by age band, gender, occupation and city, with a customer scorecard.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/sales-dashboard/5-time-intelligence.png">
+              <img src="img/sales-dashboard/5-time-intelligence.png" alt="Time Intelligence page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Page 5 · Time Intelligence</b> YTD and vs-last-year cards, best/worst month, 2022 vs 2023 by month, and sales by weekday.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/sales-dashboard/6-answers.png">
+              <img src="img/sales-dashboard/6-answers.png" alt="Answers page with written answers to the five business questions" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Page 6 · Answers</b> The five questions answered in writing, a note on reading the YoY figure, and six recommendations.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 06 FINDINGS -->
+      <section id="findings" class="section">
+        <p class="kicker">06 · Key findings</p>
+        <h2>What the data says</h2>
+
+        <figure class="chart-card">
+          <figcaption>
+            <b>Total sales by month</b>
+            <span>Jan 2022 – Mar 2023 · hover a bar for the exact figure</span>
+          </figcaption>
+          <div class="bars" id="monthly-chart" role="group" aria-label="Monthly total sales bar chart. Highest: January 2023 at $1.24M. Lowest: September 2022 at $0.79M."></div>
+          <details>
+            <summary>Show as a table</summary>
+            <table class="spec" id="monthly-table">
+              <thead><tr><th>Month</th><th>Total sales</th><th>Transactions</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </details>
+        </figure>
+
+        <div class="findings">
+          <article class="finding">
+            <p class="big">81% <small>on 60% of units</small></p>
+            <h3>Electronics carries the business</h3>
+            <p>
+              Electronics brings in $11.67M of the $14.45M on 4,834 of 8,013 units.
+              Clothing moves nearly as many units at about a third of the price, so it
+              brings people in more than it brings in money.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">14% <small>spread in units</small></p>
+            <h3>Price decides the ranking, not demand</h3>
+            <p>
+              All five products sold between 1,486 and 1,693 units. MacBook Pro sold
+              the <em>fewest</em> electronics units and still made $5.42M (37.5%), the
+              most of any product, purely on price.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">11% <small>store-to-store gap</small></p>
+            <h3>No store is an outlier</h3>
+            <p>
+              Costco (594 transactions), Best Buy (593), Walmart (570) and Target (530)
+              are close together. Changing store operations would move the total far
+              less than changing the product mix or reaching new regions.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">1 city</p>
+            <h3>Midwest's gap is coverage, not demand</h3>
+            <p>
+              Midwest is only 10% of revenue, but it is a single city (Chicago) and has
+              the second-highest average sale at $6,504. Adding cities there is the
+              clearest growth lever in the data.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">31.7% <small>on 2 of 7 days</small></p>
+            <h3>Weekends punch above their weight</h3>
+            <p>
+              Saturday and Sunday bring in nearly a third of revenue. Sunday alone is
+              the best day ($2.39M); Thursday is the weakest ($1.81M). Staff and stock
+              should follow that pattern.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">−8.1% <small>Q1 vs Q1</small></p>
+            <h3>The real trend is a soft decline</h3>
+            <p>
+              January 2023 was the best month on record ($1.24M), but February and
+              March were the second- and third-weakest. Q1 2023 ($2.87M) is down on Q1
+              2022 ($3.12M), with fewer transactions and a lower average sale.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 07 RECOMMENDATIONS -->
+      <section id="next" class="section">
+        <p class="kicker">07 · Recommendations</p>
+        <h2>What I'd do with this</h2>
+        <ol class="recs">
+          <li><b>Protect the top sellers.</b> Keep MacBook Pro and iPhone X in stock before chasing Clothing volume. That's where the money is.</li>
+          <li><b>Measure Clothing differently.</b> Track it on transactions and add-on sales, not revenue.</li>
+          <li><b>Look past individual stores.</b> With an 11% spread, product mix and regional coverage matter far more.</li>
+          <li><b>Expand in the Midwest.</b> One city with high-value customers suggests demand that isn't being reached.</li>
+          <li><b>Plan for weekends.</b> Staff and stock to the Saturday/Sunday peak.</li>
+          <li><b>Give Q1 2023 one more month.</b> Watch April before calling the decline a trend.</li>
+        </ol>
+      </section>
+
+      <!-- 08 LEARNINGS -->
+      <section id="learned" class="section">
+        <p class="kicker">08 · Reflection</p>
+        <h2>What I learned</h2>
+        <div class="trio">
+          <div>
+            <h3>Check the date range first</h3>
+            <p>
+              The most misleading number in the report was one I almost published.
+              Now I check the date coverage before comparing any two periods.
+            </p>
+          </div>
+          <div>
+            <h3>Measures over columns</h3>
+            <p>
+              Writing explicit measures, even simple ones like <code>Total Qty</code>,
+              made every visual consistent and every number on the Answers page easy
+              to trace back.
+            </p>
+          </div>
+          <div>
+            <h3>Context is the feature</h3>
+            <p>
+              <code>ALLSELECTED</code> made the best/worst cards respond to the
+              slicers. The same function gives the right total for “% of total”, so
+              the percentages stay correct when you filter.
+            </p>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="powerbi/sales-dashboard.pbix" download>Download the .pbix</a>
+          <a class="btn" href="index.html#projects">Back to all projects</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year">2026</span> Vinayak Agarwal</p>
+    </footer>
+
+    <dialog id="lightbox" aria-label="Screenshot, full size">
+      <button type="button" class="close" aria-label="Close">×</button>
+      <img alt="" />
+    </dialog>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      var root = document.documentElement;
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        var dark =
+          root.dataset.theme === 'dark' ||
+          (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+        var next = dark ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('theme', next);
+        } catch (e) {}
+      });
+
+      // Methodology tabs (arrow keys move between them).
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+      function selectTab(tab) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', on);
+          t.tabIndex = on ? 0 : -1;
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        });
+        tab.focus();
+      }
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { selectTab(tab); });
+        tab.addEventListener('keydown', function (e) {
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (d) selectTab(tabs[(i + d + tabs.length) % tabs.length]);
+        });
+      });
+
+      // Screenshot lightbox.
+      var box = document.getElementById('lightbox');
+      document.querySelectorAll('.zoom').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var img = box.querySelector('img');
+          img.src = b.dataset.src;
+          img.alt = b.querySelector('img').alt;
+          box.showModal();
+        });
+      });
+      box.addEventListener('click', function (e) {
+        if (e.target === box || e.target.classList.contains('close')) box.close();
+      });
+
+      // Monthly sales chart, values from the report's Total Sales measure.
+      var months = [
+        ['Jan 2022', 1019500, 156], ['Feb 2022', 974050, 139], ['Mar 2022', 1129450, 164],
+        ['Apr 2022', 952500, 149], ['May 2022', 978250, 169], ['Jun 2022', 880400, 144],
+        ['Jul 2022', 1020950, 167], ['Aug 2022', 914700, 150], ['Sep 2022', 788100, 132],
+        ['Oct 2022', 995400, 158], ['Nov 2022', 883150, 139], ['Dec 2022', 1038850, 163],
+        ['Jan 2023', 1236650, 193], ['Feb 2023', 806700, 126], ['Mar 2023', 827200, 138]
+      ];
+      var chart = document.getElementById('monthly-chart');
+      var tbody = document.querySelector('#monthly-table tbody');
+      var max = 1250000;
+      var money = function (v) { return '$' + v.toLocaleString('en-US'); };
+      months.forEach(function (m) {
+        var col = document.createElement('div');
+        col.className = 'bar';
+        if (m[0] === 'Jan 2023') col.dataset.note = 'Best';
+        if (m[0] === 'Sep 2022') col.dataset.note = 'Worst';
+        col.tabIndex = 0;
+        col.innerHTML =
+          '<span class="fill" style="height:' + (m[1] / max) * 100 + '%"></span>' +
+          '<span class="tip"><b>' + m[0] + '</b>' + money(m[1]) + ' · ' + m[2] + ' transactions</span>' +
+          '<span class="lbl">' + m[0].slice(0, 3) + (m[0].slice(0, 3) === 'Jan' ? '<br>' + m[0].slice(4) : '') + '</span>';
+        chart.appendChild(col);
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + m[0] + '</td><td>' + money(m[1]) + '</td><td>' + m[2] + '</td>';
+        tbody.appendChild(tr);
+      });
+    </script>
+  </body>
+</html>
