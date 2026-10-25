@@ -7,15 +7,15 @@
       name="description"
       content="Portfolio of Vinayak Agarwal: projects, skills and ways to get in touch."
     />
+    <!-- Only this site, Turnstile and the contact endpoint may load or be called. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; connect-src 'self' https://contact.vinayak-agarwal.uk; img-src 'self' data:; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Vinayak Agarwal</title>
     <link rel="stylesheet" href="style.css" />
-    <script>
-      // Apply the saved theme before first paint to avoid a flash.
-      try {
-        var t = localStorage.getItem('theme');
-        if (t) document.documentElement.dataset.theme = t;
-      } catch (e) {}
-    </script>
+    <script src="theme-init.js"></script>
   </head>
 
   <body>
@@ -266,9 +266,60 @@
       <!-- CONNECT -->
       <section id="connect" class="section">
         <h2>Connect</h2>
-        <p class="lead">Hiring for data, AI or software, or just want to say hi? Find me here.</p>
+        <p class="lead" id="connect-lead" data-fallback="Hiring for data, AI or software, or just want to say hi? Find me here.">
+          Hiring for data, AI or software, or just want to say hi? Send me a message
+          and I'll get back to you.
+        </p>
+
+        <form
+          id="contact-form"
+          class="contact-form"
+          data-endpoint="https://contact.vinayak-agarwal.uk"
+          data-sitekey="0x4AAAAAAFk96o_mmEH-LHQR"
+          novalidate
+        >
+          <div class="field">
+            <label for="cf-name">Name</label>
+            <input id="cf-name" name="name" type="text" maxlength="100" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="cf-email">Email</label>
+            <input id="cf-email" name="email" type="email" maxlength="254" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="cf-website">Website <span class="opt">optional</span></label>
+            <input id="cf-website" name="website" type="text" inputmode="url" maxlength="200" autocomplete="url" placeholder="example.com" />
+          </div>
+          <div class="field">
+            <label for="cf-social">LinkedIn or other social <span class="opt">optional</span></label>
+            <input id="cf-social" name="social" type="text" maxlength="200" placeholder="linkedin.com/in/…" />
+          </div>
+          <div class="field full">
+            <label for="cf-message">Message</label>
+            <textarea id="cf-message" name="message" rows="6" maxlength="5000" required aria-describedby="cf-count"></textarea>
+            <span id="cf-count" class="count" aria-live="off">0 / 5000</span>
+          </div>
+          <!-- Honeypot: hidden from people, filled in by bots. -->
+          <div class="hp" aria-hidden="true">
+            <label for="cf-company">Company</label>
+            <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="field full">
+            <div id="cf-turnstile"></div>
+          </div>
+          <div class="form-foot full">
+            <button type="submit" class="btn primary">Send message</button>
+            <p class="privacy">
+              Your message goes straight to my inbox. Nothing is stored on this site, and
+              your details are never shared.
+            </p>
+          </div>
+          <p id="cf-status" class="form-status full" role="status" aria-live="polite"></p>
+        </form>
+
         <div class="actions">
-          <a class="btn primary" href="https://www.linkedin.com/in/vinayakagarwal4444" target="_blank" rel="noopener">LinkedIn</a>
+          <span class="alt-label">Or find me on</span>
+          <a class="btn" href="https://www.linkedin.com/in/vinayakagarwal4444" target="_blank" rel="noopener">LinkedIn</a>
           <a class="btn" href="https://github.com/VinayakAgarwal4444" target="_blank" rel="noopener">GitHub</a>
         </div>
       </section>
@@ -278,20 +329,7 @@
       <p>© <span id="year">2026</span> Vinayak Agarwal</p>
     </footer>
 
-    <script>
-      document.getElementById('year').textContent = new Date().getFullYear();
-
-      var root = document.documentElement;
-      document.getElementById('theme-toggle').addEventListener('click', function () {
-        var dark =
-          root.dataset.theme === 'dark' ||
-          (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
-        var next = dark ? 'light' : 'dark';
-        root.dataset.theme = next;
-        try {
-          localStorage.setItem('theme', next);
-        } catch (e) {}
-      });
-    </script>
+    <script src="site.js"></script>
+    <script src="contact.js" defer></script>
   </body>
 </html>
