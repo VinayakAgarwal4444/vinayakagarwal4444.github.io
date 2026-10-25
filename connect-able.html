@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Case study: Connect-Able, a live web app that helps older Melburnians find accessible events, walks and fall-prevention advice. Vue, Flask, MariaDB and a self-hosted phone server."
+    />
+    <title>Connect-Able · Vinayak Agarwal</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('theme');
+        if (t) document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html#projects">← All projects</a>
+      <nav class="case-nav" aria-label="Case study">
+        <a href="#glance">Overview</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#app">The app</a>
+        <a href="#challenges">Challenges</a>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero case-hero">
+        <p class="eyebrow">Case study · Full-stack web app</p>
+        <h1>Connect-Able</h1>
+        <p class="lead">
+          A live web app that helps older Melburnians get out and about: what's on in the
+          city, whether they can get through the venue's front door, the weather and what
+          to bring, and practical advice on preventing falls.
+        </p>
+        <ul class="tags">
+          <li>Vue 3</li>
+          <li>Python · Flask</li>
+          <li>MariaDB</li>
+          <li>Data pipeline</li>
+          <li>Gemini API</li>
+          <li>Cloudflare</li>
+          <li>Self-hosting</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="https://connect-able.vinayak-agarwal.uk" target="_blank" rel="noopener">Open the live app</a>
+          <a class="btn" href="#challenges">Problems I solved</a>
+        </div>
+        <dl class="meta">
+          <div><dt>For</dt><dd>Older adults in Melbourne</dd></div>
+          <div><dt>Frontend</dt><dd>Vue 3 on Cloudflare Pages</dd></div>
+          <div><dt>Backend</dt><dd>Flask + MariaDB on an Android phone</dd></div>
+          <div><dt>Data</dt><dd>14,978 rated buildings</dd></div>
+        </dl>
+        <figure class="shot hero-shot">
+          <button type="button" class="zoom" data-src="img/connect-able/home.webp">
+            <img
+              src="img/connect-able/home.webp"
+              alt="Connect-Able home page: 'Feel Safer, Stay Connected, Live Fully' beside a photo of smiling older adults."
+              width="1280"
+              height="800"
+            />
+          </button>
+        </figure>
+      </section>
+
+      <!-- 01 AT A GLANCE -->
+      <section id="glance" class="section">
+        <p class="kicker">01 · At a glance</p>
+        <h2>The short version</h2>
+        <div class="trio">
+          <div>
+            <h3>The problem</h3>
+            <p>
+              Staying socially active matters as we age, but a few steps at the entrance,
+              a long walk with no toilet, or the fear of a fall is often enough to keep
+              someone at home. Event listings don't tell you any of that.
+            </p>
+          </div>
+          <div>
+            <h3>The app</h3>
+            <p>
+              Connect-Able matches every event to the City of Melbourne's building
+              accessibility survey, adds a weather forecast and an AI-generated checklist,
+              maps self-guided walks with public toilets, and offers a fall-prevention
+              guide with a personalised questionnaire.
+            </p>
+          </div>
+          <div>
+            <h3>What I did</h3>
+            <p>
+              Connect-Able began as a 2025 team project. In 2026 I brought it back online:
+              fixed a backend that crashed on every request, removed leaked keys, self-hosted
+              it on an Android phone behind Cloudflare, rebuilt the event pipeline, and added
+              an analytics page.
+            </p>
+          </div>
+        </div>
+
+        <ul class="stats">
+          <li><strong>14,978</strong><span>Buildings with access ratings</span></li>
+          <li><strong>1,430</strong><span>Eventfinda events checked per refresh</span></li>
+          <li><strong>785</strong><span>Sessions in the database</span></li>
+          <li><strong>76%</strong><span>At step-free venues</span></li>
+          <li><strong>8×</strong><span>Faster venue matching</span></li>
+          <li><strong>$0</strong><span>Server cost per month</span></li>
+        </ul>
+      </section>
+
+      <!-- 02 ARCHITECTURE -->
+      <section id="architecture" class="section">
+        <p class="kicker">02 · Architecture</p>
+        <h2>A static frontend and a phone in a drawer</h2>
+        <div class="split">
+          <figure class="diagram">
+            <svg viewBox="0 0 660 395" role="img" aria-labelledby="arch-title">
+              <title id="arch-title">
+                The visitor's browser loads the Vue frontend from Cloudflare Pages and calls
+                the API through a Cloudflare Tunnel. The tunnel reaches a Flask API on an
+                Android phone, which reads a MariaDB database and calls Eventfinda,
+                Open-Meteo and Gemini.
+              </title>
+              <g class="links">
+                <line x1="160" y1="180" x2="250" y2="80" />
+                <line x1="160" y1="200" x2="250" y2="300" />
+                <line x1="420" y1="305" x2="480" y2="220" />
+                <line x1="550" y1="235" x2="550" y2="290" />
+                <line x1="550" y1="185" x2="550" y2="110" />
+              </g>
+              <g class="node">
+                <rect x="20" y="160" width="140" height="60" rx="10" />
+                <text x="90" y="186">Browser</text>
+                <text x="90" y="205" class="sub">visitor</text>
+              </g>
+              <g class="node">
+                <rect x="250" y="40" width="170" height="60" rx="10" />
+                <text x="335" y="66">Cloudflare Pages</text>
+                <text x="335" y="85" class="sub">Vue 3 frontend</text>
+              </g>
+              <g class="node">
+                <rect x="250" y="280" width="170" height="60" rx="10" />
+                <text x="335" y="306">Cloudflare Tunnel</text>
+                <text x="335" y="325" class="sub">api.vinayak-agarwal.uk</text>
+              </g>
+              <g class="node">
+                <rect x="460" y="30" width="180" height="80" rx="10" />
+                <text x="550" y="60">External APIs</text>
+                <text x="550" y="80" class="sub">Eventfinda · Open-Meteo</text>
+                <text x="550" y="96" class="sub">Google Gemini</text>
+              </g>
+              <g class="node group">
+                <rect x="460" y="150" width="180" height="230" rx="12" />
+                <text x="550" y="368" class="sub">Android phone · Termux</text>
+              </g>
+              <g class="node fact">
+                <rect x="480" y="185" width="140" height="50" rx="10" />
+                <text x="550" y="207">Flask API</text>
+                <text x="550" y="225" class="sub">waitress</text>
+              </g>
+              <g class="node">
+                <rect x="480" y="290" width="140" height="50" rx="10" />
+                <text x="550" y="312">MariaDB</text>
+                <text x="550" y="330" class="sub">events · venues</text>
+              </g>
+            </svg>
+          </figure>
+          <div>
+            <p>
+              The frontend is a static Vue build, so Cloudflare Pages serves it free and it
+              stays up even when the backend doesn't. Home, the walks map and the
+              fall-prevention guide need nothing else.
+            </p>
+            <p>
+              The API and database run on an old Android phone in Termux, alongside my
+              personal site. A Cloudflare Tunnel gives the API a fixed HTTPS address without
+              opening any ports on my home network, and cron jobs restart anything that stops
+              and refresh events each week.
+            </p>
+            <table class="spec">
+              <thead>
+                <tr><th>Part</th><th>Built with</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Frontend</td><td>Vue 3, Vite, Bootstrap, Leaflet</td></tr>
+                <tr><td>API</td><td>Python, Flask, waitress</td></tr>
+                <tr><td>Database</td><td>MariaDB (MySQL dump from 2025)</td></tr>
+                <tr><td>Pipeline</td><td>pandas, thefuzz, geopy</td></tr>
+                <tr><td>Hosting</td><td>Cloudflare Pages, Cloudflare Tunnel, Termux</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 HOW IT WORKS -->
+      <section id="build" class="section">
+        <p class="kicker">03 · How it works</p>
+        <h2>From an event listing to "can I get in?"</h2>
+        <p class="lead">Four parts do the work. Pick one to see the detail.</p>
+
+        <div class="steps" data-tabs>
+          <div class="step-tabs" role="tablist" aria-label="How it works">
+            <button role="tab" aria-selected="true" aria-controls="step-1" id="tab-1"><b>01</b> Pipeline</button>
+            <button role="tab" aria-selected="false" aria-controls="step-2" id="tab-2" tabindex="-1"><b>02</b> Matching</button>
+            <button role="tab" aria-selected="false" aria-controls="step-3" id="tab-3" tabindex="-1"><b>03</b> AI checklist</button>
+            <button role="tab" aria-selected="false" aria-controls="step-4" id="tab-4" tabindex="-1"><b>04</b> Insights</button>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-1" aria-labelledby="tab-1">
+            <h3>An event pipeline that runs on a phone</h3>
+            <p>
+              Once a week, a cron job pulls the Eventfinda listings (about 1,400 events at the
+              moment), keeps the Victorian ones in central Melbourne suburbs,
+              splits them into individual sessions, drops sessions already in the past, and
+              writes the rest to MariaDB.
+            </p>
+            <ul>
+              <li>Credentials live only in the phone's <code>.env</code> file; a <code>--check</code> run tests them with a single request first.</li>
+              <li>Session times stay in Melbourne local time end to end, so "past" is judged in Melbourne, not UTC.</li>
+              <li>A lock stops a manual run and the cron job from overlapping.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-2" aria-labelledby="tab-2" hidden>
+            <h3>Matching events to rated buildings</h3>
+            <p>
+              Event venues and survey buildings rarely share a name, so each event is scored
+              against nearby buildings: 50% address similarity, 30% distance and 20% name
+              similarity, keeping the best match above 0.7.
+            </p>
+<pre><code># Only buildings within max_distance can score, so drop the rest with a
+# cheap bounding box before the slow geodesic and fuzzy comparisons.
+lat_pad = max_distance / 110.574 * 1.2
+lon_pad = max_distance / (111.320 * max(np.cos(np.radians(lat)), 0.01)) * 1.2
+suburb_buildings = suburb_buildings[
+    suburb_buildings['latitude'].between(lat - lat_pad, lat + lat_pad) &amp;
+    suburb_buildings['longitude'].between(lon - lon_pad, lon + lon_pad)
+]</code></pre>
+            <p>
+              The original loop compared every event with every building in its suburb, which
+              took over 20 minutes on the phone. The bounding box gives identical matches,
+              8 times faster.
+            </p>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-3" aria-labelledby="tab-3" hidden>
+            <h3>A weather-aware checklist from Gemini</h3>
+            <p>
+              Each event page fetches the forecast for the session from Open-Meteo, then asks
+              Gemini for 5 to 8 things to bring, given the event, the venue's access notes and
+              the weather: an umbrella in drizzle, a warm layer at 11°C, ID for a licensed venue.
+            </p>
+            <ul>
+              <li>The answer is constrained to a JSON array of strings with a response schema.</li>
+              <li>Busy (429/5xx) or slow responses are retried, then sent to a lighter fallback model.</li>
+              <li>If an answer is cut off, only complete items are shown, never a half-written one.</li>
+              <li>The API key travels in a header, so it can't leak into error messages.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-4" aria-labelledby="tab-4" hidden>
+            <h3>An Event Insights page</h3>
+            <p>
+              While waiting for Eventfinda API access I added an analytics page that reads the
+              same live data as the Events page and computes everything in the browser:
+              accessibility mix, age restrictions, start times, weekdays, suburbs and the
+              busiest venues, with a suburb filter and a step-free toggle.
+            </p>
+            <p>
+              Charts are plain HTML and CSS, with no chart library: one green ramp for access
+              levels, a text label on every bar, and separate dark-mode colours.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 THE APP -->
+      <section id="app" class="section">
+        <p class="kicker">04 · The app</p>
+        <h2>Page by page</h2>
+        <p class="lead">
+          Screenshots of the live app with real data. Click any one to see it full size,
+          or <a href="https://connect-able.vinayak-agarwal.uk" target="_blank" rel="noopener">try it yourself</a>.
+        </p>
+
+        <div class="gallery">
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/connect-able/events.webp">
+              <img src="img/connect-able/events.webp" alt="Browse Events page with search, suburb, date and wheelchair-accessible filters and event cards showing each venue's entrance rating." width="1280" height="800" loading="lazy" />
+            </button>
+            <figcaption><b>Events</b> Upcoming sessions with search, suburb, date and a wheelchair-accessible filter. Each card shows the venue's entrance rating.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/connect-able/event-details.webp">
+              <img src="img/connect-able/event-details.webp" alt="Event page: an 11 degree light-drizzle forecast beside an AI checklist suggesting an umbrella, ID for a licensed venue and a warm layer." width="910" height="575" loading="lazy" />
+            </button>
+            <figcaption><b>Weather and AI checklist</b> Each event page shows the forecast for the session and a Gemini checklist that adapts to it: drizzle and 11°C means an umbrella and a warm layer.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/connect-able/walks.webp">
+              <img src="img/connect-able/walks.webp" alt="Map of Melbourne's self-guided walks, coloured by length, with public toilets marked." width="1280" height="800" loading="lazy" />
+            </button>
+            <figcaption><b>Self-guided walks</b> City of Melbourne walking tours, coloured by length, with public toilets along the way.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/connect-able/fall-prevention.webp">
+              <img src="img/connect-able/fall-prevention.webp" alt="Fall Prevention Guide page with research-backed tips." width="1280" height="800" loading="lazy" />
+            </button>
+            <figcaption><b>Fall prevention</b> Research-backed tips, a personalised questionnaire, strength and balance exercises, and home-safety aids.</figcaption>
+          </figure>
+          <figure class="shot wide">
+            <button type="button" class="zoom" data-src="img/connect-able/insights.webp">
+              <img src="img/connect-able/insights.webp" alt="Event Insights page with KPI tiles, key takeaways and accessibility and age-restriction charts." width="1280" height="800" loading="lazy" />
+            </button>
+            <figcaption><b>Event insights</b> What the listings look like for someone who needs step-free access and would rather be home before dark.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 05 FINDINGS -->
+      <section id="findings" class="section">
+        <p class="kicker">05 · What the data says</p>
+        <h2>Accessible venues, late nights</h2>
+        <p class="lead">From the Insights page, across all 785 sessions as of October 2026.</p>
+        <div class="findings four">
+          <article class="finding">
+            <p class="big">76% <small>step-free</small></p>
+            <h3>Most venues are easy to enter</h3>
+            <p>Three in four sessions are at venues whose main entrance is at street level or ramped.</p>
+          </article>
+          <article class="finding">
+            <p class="big">16% <small>steps only</small></p>
+            <h3>But one in six isn't</h3>
+            <p>122 sessions are at venues where every entrance has steps, which is exactly what the access badge is there to flag.</p>
+          </article>
+          <article class="finding">
+            <p class="big">88% <small>after 5 pm</small></p>
+            <h3>Events happen after dark</h3>
+            <p>Only 94 sessions start in the daytime, a real gap for people who'd rather be home before dark.</p>
+          </article>
+          <article class="finding">
+            <p class="big">33% <small>one venue</small></p>
+            <h3>One building dominates</h3>
+            <p>The Motley Bauhaus in Carlton hosts a third of all sessions, so its step-free entrance lifts the overall numbers.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 06 CHALLENGES -->
+      <section id="challenges" class="section">
+        <p class="kicker">06 · Challenges</p>
+        <h2>Problems I solved bringing it back</h2>
+        <ol class="recs">
+          <li><b>A backend that never worked in production.</b> Every route used a database connection that was never created. Each request now opens and closes its own connection.</li>
+          <li><b>Secrets in git.</b> API keys, a database password and an Eventfinda login were committed. I revoked the leaked keys and moved every credential into environment variables.</li>
+          <li><b>Retired AI models and cut-off answers.</b> Google retired the original Gemini models, and the new thinking model ran out of output tokens mid-list. I added retries, a fallback model, a response schema and a parser that keeps only complete items.</li>
+          <li><b>A map that went blank.</b> The CARTO base map started requiring an API key. I switched to OpenStreetMap tiles, toned down with CSS to keep the routes readable.</li>
+          <li><b>Hosting on a phone.</b> I ported the database from MySQL 8 to MariaDB, found two stale tunnel connectors serving an old config, and fixed a numpy/libc++ mismatch in Termux.</li>
+          <li><b>A 20-minute refresh.</b> A bounding-box pre-filter made venue matching 8 times faster with identical results.</li>
+        </ol>
+      </section>
+
+      <!-- 07 REFLECTION -->
+      <section id="learned" class="section">
+        <p class="kicker">07 · Reflection</p>
+        <h2>What I learned</h2>
+        <div class="trio">
+          <div>
+            <h3>"Live" is a feature</h3>
+            <p>
+              The code was mostly there. What it lacked was everything around it: hosting,
+              secrets, monitoring and fresh data. That's where most of the work went.
+            </p>
+          </div>
+          <div>
+            <h3>Dependencies rot</h3>
+            <p>
+              A map provider, two AI models and a Python package all changed underneath the
+              app within a year. Making the parts configurable kept each fix small.
+            </p>
+          </div>
+          <div>
+            <h3>Look before optimising</h3>
+            <p>
+              The slow refresh looked like a database problem. Reading the matching loop
+              showed the time going on distance maths for buildings that could never match.
+            </p>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="https://connect-able.vinayak-agarwal.uk" target="_blank" rel="noopener">Open the live app</a>
+          <a class="btn" href="index.html#projects">Back to all projects</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year">2026</span> Vinayak Agarwal</p>
+    </footer>
+
+    <dialog id="lightbox" aria-label="Screenshot, full size">
+      <button type="button" class="close" aria-label="Close">×</button>
+      <img alt="" />
+    </dialog>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      var root = document.documentElement;
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        var dark =
+          root.dataset.theme === 'dark' ||
+          (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+        var next = dark ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('theme', next);
+        } catch (e) {}
+      });
+
+      // Tabs (arrow keys move between them).
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+      function selectTab(tab) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', on);
+          t.tabIndex = on ? 0 : -1;
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        });
+        tab.focus();
+      }
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { selectTab(tab); });
+        tab.addEventListener('keydown', function (e) {
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (d) selectTab(tabs[(i + d + tabs.length) % tabs.length]);
+        });
+      });
+
+      // Screenshot lightbox.
+      var box = document.getElementById('lightbox');
+      document.querySelectorAll('.zoom').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var img = box.querySelector('img');
+          img.src = b.dataset.src;
+          img.alt = b.querySelector('img').alt;
+          box.showModal();
+        });
+      });
+      box.addEventListener('click', function (e) {
+        if (e.target === box || e.target.classList.contains('close')) box.close();
+      });
+    </script>
+  </body>
+</html>
