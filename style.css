@@ -405,6 +405,147 @@ main,
   font-weight: 700;
 }
 
+/* About */
+.about-grid {
+  display: grid;
+  gap: 2rem 3rem;
+  grid-template-columns: minmax(0, 1.6fr) minmax(14rem, 1fr);
+  align-items: start;
+}
+
+.about-story p {
+  color: var(--muted);
+  margin: 0 0 1rem;
+  max-width: 40rem;
+}
+
+.facts {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 1.25rem 1.5rem;
+}
+
+.facts dt {
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.facts dd {
+  font-weight: 600;
+  margin: 0.15rem 0 0;
+}
+
+.sub-heading {
+  color: var(--muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  margin: 2.75rem 0 1rem;
+  text-transform: uppercase;
+}
+
+.timeline {
+  border-left: 2px solid var(--border);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline > li {
+  display: grid;
+  gap: 0.25rem 1.5rem;
+  grid-template-columns: 9.5rem 1fr;
+  padding: 0 0 1.75rem 1.5rem;
+  position: relative;
+}
+
+.timeline > li::before {
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  content: '';
+  height: 0.9rem;
+  left: -0.5rem;
+  position: absolute;
+  top: 0.2rem;
+  width: 0.9rem;
+}
+
+.timeline > li:last-child {
+  padding-bottom: 0;
+}
+
+.when {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+  padding-top: 0.1rem;
+}
+
+.timeline h4,
+.edu-card h4 {
+  font-size: 1.02rem;
+  margin: 0;
+}
+
+.where {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin: 0.1rem 0 0.5rem;
+}
+
+.timeline ul {
+  color: var(--muted);
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.timeline ul li + li {
+  margin-top: 0.3rem;
+}
+
+.edu-grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+
+.edu-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.edu-card p {
+  margin: 0.4rem 0 0;
+}
+
+.edu-card .where {
+  margin-top: 0.15rem;
+}
+
+.small-print {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 48rem) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .timeline > li {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Footer */
 .site-footer {
   border-top: 1px solid var(--border);

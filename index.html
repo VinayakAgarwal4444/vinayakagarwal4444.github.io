@@ -22,6 +22,7 @@
     <header class="site-header">
       <a class="brand" href="#top">Vinayak Agarwal</a>
       <nav aria-label="Primary">
+        <a href="#about">About</a>
         <a href="#projects">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#connect">Connect</a>
@@ -34,16 +35,106 @@
     <main id="top">
       <!-- HERO -->
       <section class="hero">
-        <p class="eyebrow">Developer &amp; tinkerer</p>
-        <h1>Hi, I'm Vinayak.<br />I build things for the web.</h1>
-        <!-- TODO: replace with your own one-line bio -->
+        <p class="eyebrow">AI &amp; data · Melbourne</p>
+        <h1>Hi, I'm Vinayak.<br />I turn data and AI into software people use.</h1>
         <p class="lead">
-          I'm interested in web development, blockchain and game development. This
-          is where I keep the things I've made along the way.
+          I'm a Master of AI graduate from Monash with a background in software, machine
+          learning and data engineering. I like the whole path: modelling the data,
+          building the model, and shipping the app or dashboard that puts it to work.
         </p>
         <div class="actions">
           <a class="btn primary" href="#projects">See my projects</a>
-          <a class="btn" href="#connect">Get in touch</a>
+          <a class="btn" href="#about">About me</a>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section id="about" class="section">
+        <p class="kicker">About me</p>
+        <h2>From electronics, to economics, to AI</h2>
+        <div class="about-grid">
+          <div class="about-story">
+            <p>
+              I studied Electronics and Instrumentation alongside a Master's in Economics at
+              BITS Pilani, which left me equally at home with circuits, statistics and
+              business problems. Internships at Blue Yonder and UBS pulled me towards data:
+              designing databases for supply-chain analytics, then automating financial
+              data work and building stress-testing models.
+            </p>
+            <p>
+              I moved to Melbourne for a Master of Artificial Intelligence at Monash,
+              graduating with Distinction in 2025. My capstone, Connect-Able, was built in
+              an Agile team with industry stakeholders from Coles and Flybuys, and I've since
+              brought it back as a live, self-hosted app.
+            </p>
+            <p>
+              Today I work on NBN support at Telstra, where diagnosing faults across complex
+              network setups keeps my root-cause instincts sharp. I'm looking for roles in
+              data, AI and software where I can build things end to end.
+            </p>
+          </div>
+          <dl class="facts">
+            <div><dt>Based in</dt><dd>Melbourne, Australia</dd></div>
+            <div><dt>Now</dt><dd>NBN Front-of-House Associate, Telstra</dd></div>
+            <div><dt>Studied</dt><dd>MS Artificial Intelligence, Monash (Distinction)</dd></div>
+            <div><dt>Looking for</dt><dd>Data, AI and software roles</dd></div>
+          </dl>
+        </div>
+
+        <h3 class="sub-heading">Experience</h3>
+        <ol class="timeline">
+          <li>
+            <div class="when">Oct 2025 – present</div>
+            <div>
+              <h4>NBN Front-of-House Associate · Telstra</h4>
+              <p class="where">Melbourne, Australia</p>
+              <ul>
+                <li>Kept a 79% first-resolution rate on complex NBN connectivity faults, 15% above the Melbourne team average.</li>
+                <li>Cut Level 2 engineering escalations by 10% through root-cause analysis across FTTP, FTTN, FTTC and HFC networks.</li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <div class="when">Jan – Jun 2023</div>
+            <div>
+              <h4>Asset Management Intern · UBS</h4>
+              <p class="where">Mumbai, India</p>
+              <ul>
+                <li>Automated 85% of manual financial data processing with Python and R, speeding up Federal Reserve CCAR stress-testing cycles.</li>
+                <li>Built machine-learning statistical models with 98% back-testing accuracy against high-volatility macroeconomic scenarios.</li>
+                <li>Wrote 50+ pages of model-validation documentation, accepted by an external review board.</li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <div class="when">Jun – Dec 2022</div>
+            <div>
+              <h4>Software Intern · Blue Yonder</h4>
+              <p class="where">Bangalore, India</p>
+              <ul>
+                <li>Led the design of 3NF logical models, removing redundancy across 50,000+ unique records.</li>
+                <li>Optimised SQL databases on Oracle Cloud, cutting query latency by 40% for supply-chain BI applications.</li>
+              </ul>
+            </div>
+          </li>
+        </ol>
+
+        <h3 class="sub-heading">Education</h3>
+        <div class="edu-grid">
+          <article class="edu-card">
+            <p class="when">Jul 2023 – Jul 2025</p>
+            <h4>Master of Artificial Intelligence</h4>
+            <p class="where">Monash University, Clayton</p>
+            <p><b>Distinction</b> · WAM 78.75</p>
+            <p class="small-print">Deep learning, machine learning, NLP, algorithms, project management. Member of Monash DeepNeuron; Monash Graduate Association volunteer.</p>
+          </article>
+          <article class="edu-card">
+            <p class="when">Jul 2018 – Jun 2023</p>
+            <h4>BE Electronics &amp; Instrumentation, MSc Economics</h4>
+            <p class="where">BITS Pilani, K. K. Birla Goa Campus</p>
+            <p><b>First Class</b> · WAM 73</p>
+            <p class="small-print">Statistics, econometrics, business valuation, financial management. Student Faculty Council member for Marketing Research.</p>
+          </article>
         </div>
       </section>
 
@@ -54,9 +145,9 @@
           <article class="card">
             <h3>Connect-Able</h3>
             <p>
-              A live web app that helps older Melburnians find events at step-free venues,
-              with weather, an AI-generated checklist, walking maps and fall-prevention
-              advice. Self-hosted on an Android phone behind Cloudflare.
+              My Monash capstone, built with Coles and Flybuys stakeholders: a live web app
+              that helps older Melburnians find events at step-free venues, with weather, an
+              AI-generated checklist, walking maps and fall-prevention advice.
             </p>
             <ul class="tags"><li>Vue 3</li><li>Flask</li><li>MariaDB</li><li>Gemini API</li></ul>
             <div class="card-links">
@@ -107,7 +198,7 @@
             </svg>
             <h3>Data Analysis &amp; BI</h3>
             <ul class="chips">
-              <li>SQL</li><li>Power BI</li><li>Excel (Pivot Tables)</li>
+              <li>SQL</li><li>Power BI &amp; DAX</li><li>Excel (Pivot Tables)</li>
               <li>Python: Pandas, NumPy, PySpark</li><li>R</li>
               <li>Statistical modelling</li><li>Data cleansing</li><li>Data ingestion</li>
             </ul>
@@ -124,8 +215,8 @@
             <h3>Machine Learning &amp; AI</h3>
             <ul class="chips">
               <li>PyTorch</li><li>Deep learning</li><li>CNNs</li>
-              <li>Reinforcement learning</li><li>NLP</li><li>Search &amp; path planning</li>
-              <li>Prompt engineering</li>
+              <li>Reinforcement learning (DQN)</li><li>NLP</li><li>Search &amp; path planning</li>
+              <li>Clustering (EM, PCA)</li><li>Prompt engineering</li>
             </ul>
             <p class="proof">MS in Artificial Intelligence, Monash (Distinction). ML models with 98% back-test accuracy at UBS.</p>
           </article>
@@ -137,8 +228,8 @@
             </svg>
             <h3>Databases &amp; Data Management</h3>
             <ul class="chips">
-              <li>Oracle DB</li><li>SQL database design</li><li>MongoDB</li>
-              <li>Data modelling (3NF)</li><li>Data governance</li>
+              <li>Oracle DB</li><li>SQL database design</li><li>MongoDB (NoSQL)</li>
+              <li>Data modelling (3NF)</li><li>Oracle Data Modeler</li><li>Data governance</li>
             </ul>
             <p class="proof">Cut query latency 40% on Oracle Cloud for supply-chain BI at Blue Yonder.</p>
           </article>
@@ -149,10 +240,10 @@
             </svg>
             <h3>Cloud, Web &amp; DevOps</h3>
             <ul class="chips">
-              <li>AWS</li><li>GCP</li><li>Flask</li><li>Vue.js</li>
+              <li>AWS</li><li>GCP</li><li>Cloudflare</li><li>Flask</li><li>Vue.js</li>
               <li>CI/CD</li><li>Git</li><li>C &amp; OpenMP</li>
             </ul>
-            <p class="proof">Shipped a Flask, Vue.js and Gemini API web app on AWS for Coles and Flybuys.</p>
+            <p class="proof">Shipped a Flask, Vue.js and Gemini API web app on AWS with Coles and Flybuys stakeholders.</p>
           </article>
 
           <article class="skill-card" style="--hue: var(--hue-5)">
@@ -163,8 +254,9 @@
             <h3>Ways of Working</h3>
             <ul class="chips">
               <li>Root-cause analysis</li><li>Stakeholder communication</li>
-              <li>Agile delivery</li><li>Process improvement</li>
-              <li>Technical documentation</li><li>Learning agility</li>
+              <li>Project delivery</li><li>Agile</li><li>Process improvement</li>
+              <li>Teamwork &amp; independent work</li><li>Technical documentation</li>
+              <li>Learning agility</li>
             </ul>
             <p class="proof">79% first-time resolution at Telstra, 15% above the team average.</p>
           </article>
@@ -174,10 +266,10 @@
       <!-- CONNECT -->
       <section id="connect" class="section">
         <h2>Connect</h2>
-        <p class="lead">Want to collaborate or just say hi? Find me here.</p>
+        <p class="lead">Hiring for data, AI or software, or just want to say hi? Find me here.</p>
         <div class="actions">
-          <a class="btn" href="https://github.com/VinayakAgarwal4444">GitHub</a>
-          <!-- TODO: add LinkedIn / email / other links you actually use -->
+          <a class="btn primary" href="https://www.linkedin.com/in/vinayakagarwal4444" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://github.com/VinayakAgarwal4444" target="_blank" rel="noopener">GitHub</a>
         </div>
       </section>
     </main>
