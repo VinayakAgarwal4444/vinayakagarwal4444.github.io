@@ -1,5 +1,6 @@
 // Contact form: sends the message to the contact Worker (see data-endpoint),
-// protected by Cloudflare Turnstile. Everything but the message is optional.
+// protected by Cloudflare Turnstile. Name, email and message are required;
+// website and social are optional.
 (function () {
   var form = document.getElementById('contact-form');
   if (!form) return;
@@ -49,14 +50,24 @@
     e.preventDefault();
     var f = form.elements;
 
+    if (!f.name.value.trim()) {
+      setStatus('Please add your name.', 'error');
+      f.name.focus();
+      return;
+    }
+    if (!f.email.value.trim()) {
+      setStatus('Please add your email so I can reply.', 'error');
+      f.email.focus();
+      return;
+    }
+    if (!f.email.checkValidity()) {
+      setStatus('That email address doesn’t look right.', 'error');
+      f.email.focus();
+      return;
+    }
     if (!f.message.value.trim()) {
       setStatus('Please write a message.', 'error');
       f.message.focus();
-      return;
-    }
-    if (f.email.value && !f.email.checkValidity()) {
-      setStatus('That email address doesn’t look right.', 'error');
-      f.email.focus();
       return;
     }
     var token = window.turnstile && widgetId !== null ? window.turnstile.getResponse(widgetId) : '';
