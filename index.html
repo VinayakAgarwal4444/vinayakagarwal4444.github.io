@@ -14,8 +14,8 @@
     />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Vinayak Agarwal</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="theme-init.js"></script>
+    <link rel="stylesheet" href="style.css?v=20261025b" />
+    <script src="theme-init.js?v=20261025b"></script>
   </head>
 
   <body>
@@ -139,35 +139,79 @@
       </section>
 
       <!-- PROJECTS -->
-      <section id="projects" class="section">
+      <section id="projects" class="section projects">
+        <p class="kicker">Selected work</p>
         <h2>Projects</h2>
-        <div class="grid">
-          <article class="card">
-            <h3>Connect-Able</h3>
-            <p>
-              My Monash capstone, built with Coles and Flybuys stakeholders: a live web app
-              that helps older Melburnians find events at step-free venues, with weather, an
-              AI-generated checklist, walking maps and fall-prevention advice.
-            </p>
-            <ul class="tags"><li>Vue 3</li><li>Flask</li><li>MariaDB</li><li>Gemini API</li></ul>
-            <div class="card-links">
-              <a class="card-link" href="connect-able.html">Read the case study →</a>
-              <a class="card-link" href="https://connect-able.vinayak-agarwal.uk" target="_blank" rel="noopener">Live app ↗</a>
-            </div>
-          </article>
+        <p class="lead">Two builds I'm proud of, from live data pipelines and AI to business dashboards.</p>
 
-          <article class="card">
-            <h3>Sales Dashboard</h3>
-            <p>
-              A six-page Power BI report on $14.4M of sales across 2,287 transactions:
-              executive overview, products, stores and geography, customer demographics
-              and year-over-year time intelligence, built on a star-schema model with 24
-              DAX measures.
+        <article class="showcase" data-spotlight>
+          <a class="frame" href="connect-able.html" aria-label="Connect-Able case study" data-tilt>
+            <span class="frame-bar" aria-hidden="true">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="url">connect-able.vinayak-agarwal.uk</span>
+            </span>
+            <img class="shot-main" src="img/connect-able/home.webp" alt="Connect-Able home page" width="1280" height="800" loading="lazy" />
+            <img class="shot-float" src="img/connect-able/event-details.webp" alt="" width="910" height="575" loading="lazy" />
+          </a>
+          <div class="showcase-body">
+            <div class="badges">
+              <span class="badge live"><span class="pulse" aria-hidden="true"></span>Live</span>
+              <span class="badge">Full-stack · AI</span>
+              <span class="badge">Monash capstone</span>
+            </div>
+            <p class="index" aria-hidden="true">01</p>
+            <h3>Connect-Able</h3>
+            <p class="summary">
+              A live web app that helps older Melburnians find events at step-free venues,
+              with the weather, a Gemini-written checklist, walking maps and fall-prevention
+              advice. Built with Coles and Flybuys stakeholders, now self-hosted.
             </p>
-            <ul class="tags"><li>Power BI</li><li>DAX</li><li>Data modelling</li></ul>
-            <a class="card-link" href="sales-dashboard.html">Read the case study →</a>
-          </article>
-        </div>
+            <ul class="metrics">
+              <li><b>14,978</b><span>buildings rated</span></li>
+              <li><b>785</b><span>event sessions</span></li>
+              <li><b>8&times;</b><span>faster matching</span></li>
+            </ul>
+            <ul class="tags"><li>Vue 3</li><li>Flask</li><li>MariaDB</li><li>Gemini API</li><li>Cloudflare</li></ul>
+            <div class="showcase-cta">
+              <a class="btn primary" href="connect-able.html">Read the case study <span aria-hidden="true">&rarr;</span></a>
+              <a class="btn ghost" href="https://connect-able.vinayak-agarwal.uk" target="_blank" rel="noopener">Open live app <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="showcase reverse" data-spotlight>
+          <a class="frame" href="sales-dashboard.html" aria-label="Sales Dashboard case study" data-tilt>
+            <span class="frame-bar" aria-hidden="true">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="url">Power BI · Retail Sales Dashboard</span>
+            </span>
+            <img class="shot-main" src="img/sales-dashboard/thumb-overview.webp" alt="Sales dashboard executive overview page" width="1125" height="633" loading="lazy" />
+            <img class="shot-float" src="img/sales-dashboard/thumb-time.webp" alt="" width="1125" height="633" loading="lazy" />
+          </a>
+          <div class="showcase-body">
+            <div class="badges">
+              <span class="badge">Business intelligence</span>
+              <span class="badge">Data modelling</span>
+            </div>
+            <p class="index" aria-hidden="true">02</p>
+            <h3>Retail Sales Dashboard</h3>
+            <p class="summary">
+              A six-page Power BI report on fifteen months of retail sales: executive KPIs,
+              products, stores, customers and year-over-year trends, built on a star schema
+              and checked against the raw data before any number was quoted.
+            </p>
+            <ul class="metrics">
+              <li><b>$14.4M</b><span>sales analysed</span></li>
+              <li><b>24</b><span>DAX measures</span></li>
+              <li><b>6</b><span>report pages</span></li>
+            </ul>
+            <ul class="tags"><li>Power BI</li><li>DAX</li><li>Star schema</li><li>Time intelligence</li></ul>
+            <div class="showcase-cta">
+              <a class="btn primary" href="sales-dashboard.html">Read the case study <span aria-hidden="true">&rarr;</span></a>
+              <a class="btn ghost" href="powerbi/sales-dashboard.pbix" download>Download .pbix <span aria-hidden="true">&darr;</span></a>
+            </div>
+          </div>
+        </article>
       </section>
 
       <!-- SKILLS -->
@@ -265,62 +309,86 @@
 
       <!-- CONNECT -->
       <section id="connect" class="section">
-        <h2>Connect</h2>
-        <p class="lead" id="connect-lead" data-fallback="Hiring for data, AI or software, or just want to say hi? Find me here.">
-          Hiring for data, AI or software, or just want to say hi? Send me a message
-          and I'll get back to you.
-        </p>
-
-        <form
-          id="contact-form"
-          class="contact-form"
-          data-endpoint="https://contact.vinayak-agarwal.uk"
-          data-sitekey="0x4AAAAAAFk96o_mmEH-LHQR"
-          novalidate
-        >
-          <div class="field">
-            <label for="cf-name">Name</label>
-            <input id="cf-name" name="name" type="text" maxlength="100" autocomplete="name" required />
-          </div>
-          <div class="field">
-            <label for="cf-email">Email</label>
-            <input id="cf-email" name="email" type="email" maxlength="254" autocomplete="email" required />
-          </div>
-          <div class="field">
-            <label for="cf-website">Website <span class="opt">optional</span></label>
-            <input id="cf-website" name="website" type="text" inputmode="url" maxlength="200" autocomplete="url" placeholder="example.com" />
-          </div>
-          <div class="field">
-            <label for="cf-social">LinkedIn or other social <span class="opt">optional</span></label>
-            <input id="cf-social" name="social" type="text" maxlength="200" placeholder="linkedin.com/in/…" />
-          </div>
-          <div class="field full">
-            <label for="cf-message">Message</label>
-            <textarea id="cf-message" name="message" rows="6" maxlength="5000" required aria-describedby="cf-count"></textarea>
-            <span id="cf-count" class="count" aria-live="off">0 / 5000</span>
-          </div>
-          <!-- Honeypot: hidden from people, filled in by bots. -->
-          <div class="hp" aria-hidden="true">
-            <label for="cf-company">Company</label>
-            <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
-          </div>
-          <div class="field full">
-            <div id="cf-turnstile"></div>
-          </div>
-          <div class="form-foot full">
-            <button type="submit" class="btn primary">Send message</button>
-            <p class="privacy">
-              Your message goes straight to my inbox. Nothing is stored on this site, and
-              your details are never shared.
+        <div class="connect-grid">
+          <div class="connect-intro">
+            <p class="kicker">Contact</p>
+            <h2>Let's talk</h2>
+            <p
+              class="lead"
+              id="connect-lead"
+              data-fallback="Hiring for data, AI or software, or want to collaborate? Find me on LinkedIn or GitHub."
+            >
+              Hiring for data, AI or software, or want to collaborate? Send me a message and
+              I'll get back to you.
             </p>
+            <ul class="connect-points">
+              <li>Data, AI and software roles</li>
+              <li>Project collaborations</li>
+              <li>Questions about my work</li>
+            </ul>
+            <div class="connect-links">
+              <p class="alt-label">Elsewhere</p>
+              <a href="https://www.linkedin.com/in/vinayakagarwal4444" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3v-11zm6.5 0h3.8v1.5h.06c.53-1 1.83-1.8 3.76-1.8 4.02 0 4.88 2.5 4.88 5.8v5.5h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6v4.98h-4v-11z" /></svg>
+                <span>LinkedIn</span>
+                <span class="handle">/in/vinayakagarwal4444</span>
+              </a>
+              <a href="https://github.com/VinayakAgarwal4444" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z" /></svg>
+                <span>GitHub</span>
+                <span class="handle">VinayakAgarwal4444</span>
+              </a>
+            </div>
           </div>
-          <p id="cf-status" class="form-status full" role="status" aria-live="polite"></p>
-        </form>
 
-        <div class="actions">
-          <span class="alt-label">Or find me on</span>
-          <a class="btn" href="https://www.linkedin.com/in/vinayakagarwal4444" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn" href="https://github.com/VinayakAgarwal4444" target="_blank" rel="noopener">GitHub</a>
+          <form
+            id="contact-form"
+            class="contact-form"
+            data-endpoint="https://contact.vinayak-agarwal.uk"
+            data-sitekey="0x4AAAAAAFk96o_mmEH-LHQR"
+            novalidate
+          >
+            <div class="field">
+              <label for="cf-name">Name</label>
+              <input id="cf-name" name="name" type="text" maxlength="100" autocomplete="name" required />
+            </div>
+            <div class="field">
+              <label for="cf-email">Email</label>
+              <input id="cf-email" name="email" type="email" maxlength="254" autocomplete="email" required />
+            </div>
+            <div class="field">
+              <label for="cf-website">Website <span class="opt">Optional</span></label>
+              <input id="cf-website" name="website" type="text" inputmode="url" maxlength="200" autocomplete="url" placeholder="example.com" />
+            </div>
+            <div class="field">
+              <label for="cf-social">LinkedIn or social <span class="opt">Optional</span></label>
+              <input id="cf-social" name="social" type="text" maxlength="200" placeholder="linkedin.com/in/your-name" />
+            </div>
+            <div class="field full">
+              <div class="label-row">
+                <label for="cf-message">Message</label>
+                <span id="cf-count" class="count" aria-live="off">0 / 5000</span>
+              </div>
+              <textarea id="cf-message" name="message" rows="6" maxlength="5000" required placeholder="What would you like to talk about?"></textarea>
+            </div>
+            <!-- Honeypot: hidden from people, filled in by bots. -->
+            <div class="hp" aria-hidden="true">
+              <label for="cf-company">Company</label>
+              <input id="cf-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="form-foot full">
+              <div id="cf-turnstile"></div>
+              <button type="submit" class="btn primary send">
+                Send message
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </button>
+            </div>
+            <p id="cf-status" class="form-status full" role="status" aria-live="polite"></p>
+            <p class="privacy full">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+              Sent straight to my inbox. Nothing is stored on this site, and your details are never shared.
+            </p>
+          </form>
         </div>
       </section>
     </main>
@@ -329,7 +397,7 @@
       <p>© <span id="year">2026</span> Vinayak Agarwal</p>
     </footer>
 
-    <script src="site.js"></script>
-    <script src="contact.js" defer></script>
+    <script src="site.js?v=20261025b"></script>
+    <script src="contact.js?v=20261025b" defer></script>
   </body>
 </html>

@@ -23,8 +23,8 @@
     form.hidden = true;
     var lead = document.getElementById('connect-lead');
     if (lead) lead.textContent = lead.dataset.fallback;
-    var alt = document.querySelector('.alt-label');
-    if (alt) alt.hidden = true;
+    var grid = form.closest('.connect-grid');
+    if (grid) grid.classList.add('no-form');
     return;
   }
 
