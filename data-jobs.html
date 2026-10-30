@@ -58,7 +58,7 @@
           <div><dt>Period</dt><dd>Jan – Dec 2024</dd></div>
           <div><dt>Data</dt><dd>478,895 postings · 17 columns</dd></div>
           <div><dt>Scope</dt><dd>10 roles · 160 countries</dd></div>
-          <div><dt>Report</dt><dd>12 pages · 77 visuals</dd></div>
+          <div><dt>Report</dt><dd>12 pages · 79 visuals</dd></div>
         </dl>
         <figure class="shot hero-shot">
           <button type="button" class="zoom" data-src="img/data-jobs/1-dashboard.png">
@@ -175,7 +175,8 @@
               role, company, location, schedule, salary, and the list of skills the
               posting mentions. With one fact and no lookups to share, a star schema
               would have added joins without adding meaning, so I kept it as one table
-              and let Power BI's date hierarchy handle the time axis.
+              and let Power BI's date hierarchy handle the time axis. Two DAX calculated
+              columns fix problems in the source without editing it (see step 05).
             </p>
             <table class="spec">
               <thead>
@@ -184,6 +185,7 @@
               <tbody>
                 <tr><td>job_postings_flat</td><td>478,895</td><td>job_title_short, job_country, job_posted_date, job_schedule_type, job_via, salary_year_avg, salary_hour_avg, job_skills</td></tr>
                 <tr><td>Flags</td><td>3</td><td>job_work_from_home, job_no_degree_mention, job_health_insurance (true / false)</td></tr>
+                <tr><td>Cleaned</td><td>2</td><td>job_country_clean, job_via_clean: DAX calculated columns that every country and job-board visual uses</td></tr>
                 <tr><td>funnel_data</td><td>6</td><td>Stage, Applicants: a sample hiring funnel</td></tr>
                 <tr><td>waterfall_data</td><td>5</td><td>Comp, Amount: a sample pay package breakdown</td></tr>
               </tbody>
@@ -266,6 +268,7 @@
               <li>The trend line uses the full <b>Year → Quarter → Month → Day</b> hierarchy, so you can drill from the year into any month.</li>
               <li>A <b>scatter</b> of hourly against yearly median by role shows whether the two pay scales agree.</li>
               <li>A <b>matrix</b> by role and quarter with a monthly <b>sparkline</b> fits the trend for every role into one table.</li>
+              <li>Every visual sits on the same <b>16-pixel grid</b> as a white card on a light grey page, titled with the question it answers.</li>
             </ul>
 <pre><code>Salary Star Rating =
 VAR __MAX_NUMBER_OF_STARS = 5
@@ -299,37 +302,43 @@ RETURN
           </div>
 
           <div class="step-panel" role="tabpanel" id="step-5" aria-labelledby="tab-5" hidden>
-            <h3>Check the data before trusting it</h3>
+            <h3>Check the data, then fix what's wrong</h3>
             <p>
-              Before writing anything up I went back to the raw rows. Four issues
-              change how the report should be read.
+              Before writing anything up I went back to the raw rows and audited every
+              visual. One issue can only be caveated; the rest are fixed in the report.
             </p>
             <ul>
               <li>
-                <b>Salary is rare.</b> Only 20,335 postings (4.2%) give a yearly salary and
-                10,076 an hourly one. 80% of the yearly salaries are from the US, which
-                has only 29% of all postings. The pay figures describe the US market
-                more than the global one.
+                <b>Salary is rare (caveat).</b> Only 20,335 postings (4.2%) give a yearly
+                salary and 10,076 an hourly one. 84% of the yearly salaries are from the
+                US, which has only 31% of all postings. The pay figures describe the US
+                market more than the global one.
               </li>
               <li>
-                <b>“Sudan” isn't Sudan.</b> The country column comes from the search
-                location, not the job. The 10,688 “Sudan” postings are mostly listed as
-                “Anywhere” or in US cities like Dallas and Austin. They would make Sudan
-                the ninth-biggest market on the map.
+                <b>“Sudan” wasn't Sudan (fixed).</b> The country column comes from the
+                search location, not the job. Of 10,688 “Sudan” postings, only 36
+                mention Sudan; the rest are in US cities like Dallas and Austin, or
+                “Anywhere”. A calculated column moves the US ones to the United States and
+                leaves the location-less ones blank, instead of making Sudan the
+                ninth-biggest market on the map.
               </li>
               <li>
-                <b>The same job board under many names.</b> “via LinkedIn” and
-                “LinkedIn” are separate values, and the column has 7,817 distinct
-                entries. Stripping the “via” prefix brings it down to 6,541 and makes
-                LinkedIn's real share clear: 36% of postings.
+                <b>One job board, many names (fixed).</b> “via LinkedIn” and “LinkedIn”
+                were separate values, among 7,817 distinct entries. A second calculated
+                column strips the “via” prefix, which brings it down to 6,541 and shows
+                LinkedIn's real share: 36% of postings.
               </li>
               <li>
-                <b>Titles that promise the wrong thing.</b> On the dashboard, the bar
-                chart titled “What is the highest paying job in data?” plots the number of
-                postings, not pay; the salary version is on the Column &amp; Bar page. On
-                the drill-through page, the hourly gauge and the health-insurance donut
-                kept titles copied from their neighbours. These are the first fixes on
-                my list for the next version.
+                <b>A count that skipped rows (fixed).</b> Both matrices counted postings
+                by country, so any posting without a country went missing from the
+                “Job Count” column. They now count by job title, which every row has.
+              </li>
+              <li>
+                <b>Titles and labels (fixed).</b> The dashboard bar chart was titled
+                “What is the highest paying job in data?” but plots the number of postings,
+                so its title now says so. Two drill-through titles were copied from their
+                neighbours, typos like “Yealy”, “Salarry”, “Titlle” and “haave” are gone,
+                and raw field names like “Count of job_via” now read as plain labels.
               </li>
             </ul>
           </div>
@@ -486,8 +495,8 @@ RETURN
           <li><b>For analyst roles, pair them with a BI tool.</b> Excel, Tableau and Power BI each appear in a quarter to a third of analyst postings.</li>
           <li><b>Treat engineering as the growth path.</b> It's the largest role and pays $36K more at the median than analysis.</li>
           <li><b>Don't rule out roles over a degree.</b> A third of analyst and engineering postings don't ask for one, at almost the same pay.</li>
-          <li><b>Read the salary charts as US figures.</b> Four in five salaried postings are American, so check local data before using them elsewhere.</li>
-          <li><b>Clean the source before the next version.</b> Derive country from the job's location and normalise the job board names, then rebuild the map and job-board charts.</li>
+          <li><b>Read the salary charts as US figures.</b> More than four in five salaried postings are American, so check local data before using them elsewhere.</li>
+          <li><b>Add a second year.</b> A 2025 extract would show whether the drop in Q4 was the job market or a change in how the postings were collected.</li>
         </ol>
       </section>
 
