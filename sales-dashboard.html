@@ -8,7 +8,7 @@
       content="Case study: a six-page Power BI sales dashboard. How the model, DAX and report were built, and what the data says."
     />
     <title>Retail Sales Dashboard · Vinayak Agarwal</title>
-    <link rel="stylesheet" href="style.css?v=20261025b" />
+    <link rel="stylesheet" href="style.css?v=20261030" />
     <script>
       // Apply the saved theme before first paint to avoid a flash.
       try {
@@ -609,6 +609,7 @@ RETURN CONCATENATEX ( R, Products[Product Name] &amp; " (" &amp; FORMAT ( [@S], 
         if (m[0] === 'Jan 2023') col.dataset.note = 'Best';
         if (m[0] === 'Sep 2022') col.dataset.note = 'Worst';
         col.tabIndex = 0;
+        col.style.setProperty('--h', (m[1] / max) * 100 + '%');
         col.innerHTML =
           '<span class="fill" style="height:' + (m[1] / max) * 100 + '%"></span>' +
           '<span class="tip"><b>' + m[0] + '</b>' + money(m[1]) + ' · ' + m[2] + ' transactions</span>' +

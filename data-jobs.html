@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Case study: a Power BI report on 478,895 data job postings from 2024. What pays, which skills are asked for, and where the data can't be trusted."
+    />
+    <title>Data Jobs Analysis · Vinayak Agarwal</title>
+    <link rel="stylesheet" href="style.css?v=20261030" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('theme');
+        if (t) document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html#projects">← All projects</a>
+      <nav class="case-nav" aria-label="Case study">
+        <a href="#glance">Overview</a>
+        <a href="#build">How</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#findings">Findings</a>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <span aria-hidden="true">◐</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero case-hero">
+        <p class="eyebrow">Case study · Power BI</p>
+        <h1>Data Jobs Analysis</h1>
+        <p class="lead">
+          A year of data job postings, 478,895 of them from 160 countries, turned into an
+          interactive Power BI report. It answers the questions I had as someone looking
+          for work in data: which roles pay best, which skills are in demand, and how
+          much of it is remote.
+        </p>
+        <ul class="tags">
+          <li>Power BI</li>
+          <li>Power Query</li>
+          <li>DAX</li>
+          <li>Drill-through</li>
+          <li>Data quality</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="powerbi/data-jobs-analysis.pbix" download>Download .pbix</a>
+          <a class="btn" href="#findings">Jump to findings</a>
+        </div>
+        <dl class="meta">
+          <div><dt>Period</dt><dd>Jan – Dec 2024</dd></div>
+          <div><dt>Data</dt><dd>478,895 postings · 17 columns</dd></div>
+          <div><dt>Scope</dt><dd>10 roles · 160 countries</dd></div>
+          <div><dt>Report</dt><dd>12 pages · 77 visuals</dd></div>
+        </dl>
+        <figure class="shot hero-shot">
+          <button type="button" class="zoom" data-src="img/data-jobs/1-dashboard.png">
+            <img
+              src="img/data-jobs/1-dashboard.png"
+              alt="Data Jobs Dashboard page: job title slicer, median salary and star rating cards, postings trend line, postings by role bar chart, hourly against yearly salary scatter, and a matrix by role and quarter with sparklines."
+              width="1280"
+              height="720"
+            />
+          </button>
+        </figure>
+      </section>
+
+      <!-- 01 AT A GLANCE -->
+      <section id="glance" class="section">
+        <p class="kicker">01 · At a glance</p>
+        <h2>The short version</h2>
+        <div class="trio">
+          <div>
+            <h3>The question</h3>
+            <p>
+              What does the market for data jobs actually look like? Which roles pay
+              most, which skills keep showing up, and how often can you work from home
+              or skip the degree requirement?
+            </p>
+          </div>
+          <div>
+            <h3>What I did</h3>
+            <p>
+              Loaded the postings with Power Query, then built one practice page for
+              each family of Power BI visual. The last two pages are the real
+              product: a dashboard you slice by role and a drill-through page with
+              the detail for any one role.
+            </p>
+          </div>
+          <div>
+            <h3>What I found</h3>
+            <p>
+              Senior and ML roles pay about $155K, Data Analysts $90K. SQL and Python
+              are each in half of all postings. And only 4% of postings list a yearly
+              salary, mostly in the US, so the pay figures need a caveat.
+            </p>
+          </div>
+        </div>
+
+        <ul class="stats">
+          <li><strong>478,895</strong><span>Job postings</span></li>
+          <li><strong>$113K</strong><span>Median yearly salary</span></li>
+          <li><strong>$47.62</strong><span>Median hourly rate</span></li>
+          <li><strong>13.2%</strong><span>Work from home</span></li>
+          <li><strong>32.5%</strong><span>No degree mentioned</span></li>
+          <li><strong>93,020</strong><span>Hiring companies</span></li>
+        </ul>
+      </section>
+
+      <!-- 02 BRIEF -->
+      <section id="brief" class="section">
+        <p class="kicker">02 · The brief</p>
+        <h2>Questions a job seeker asks</h2>
+        <p class="lead">
+          I built this while job hunting, so the questions are the ones I wanted
+          answered. The dashboard answers the first three for every role at once; the
+          drill-through page answers the rest for whichever role you pick.
+        </p>
+        <ol class="questions">
+          <li><b>Q1</b> How did the number of postings change over 2024?</li>
+          <li><b>Q2</b> Which data roles are most in demand, and which pay best?</li>
+          <li><b>Q3</b> How do hourly and yearly pay compare across roles?</li>
+          <li><b>Q4</b> For one role: how often is it remote, degree-free, or with health insurance?</li>
+          <li><b>Q5</b> For one role: where in the world are the jobs, and on which job boards?</li>
+        </ol>
+      </section>
+
+      <!-- 03 DATA MODEL -->
+      <section id="model" class="section">
+        <p class="kicker">03 · Data model</p>
+        <h2>One wide table, kept honest</h2>
+        <div class="split">
+          <figure class="diagram">
+            <svg viewBox="0 0 460 320" role="img" aria-labelledby="schema-title">
+              <title id="schema-title">
+                Model: the job_postings_flat table in the centre, joined to an automatic
+                date table on the posted date. Two small standalone tables hold the funnel
+                and waterfall examples.
+              </title>
+              <g class="links">
+                <line x1="230" y1="160" x2="370" y2="60" />
+              </g>
+              <g class="node">
+                <rect x="300" y="30" width="140" height="60" rx="10" />
+                <text x="370" y="56">Date</text>
+                <text x="370" y="75" class="sub">auto date/time · 1</text>
+              </g>
+              <g class="node">
+                <rect x="20" y="230" width="140" height="60" rx="10" />
+                <text x="90" y="256">funnel_data</text>
+                <text x="90" y="275" class="sub">6 rows · standalone</text>
+              </g>
+              <g class="node">
+                <rect x="300" y="230" width="140" height="60" rx="10" />
+                <text x="370" y="256">waterfall_data</text>
+                <text x="370" y="275" class="sub">5 rows · standalone</text>
+              </g>
+              <g class="node fact">
+                <rect x="140" y="125" width="180" height="70" rx="10" />
+                <text x="230" y="155">job_postings_flat</text>
+                <text x="230" y="175" class="sub">478,895 rows · many</text>
+              </g>
+            </svg>
+          </figure>
+          <div>
+            <p>
+              The source is a single CSV with one row per posting, already flattened:
+              role, company, location, schedule, salary, and the list of skills the
+              posting mentions. With one fact and no lookups to share, a star schema
+              would have added joins without adding meaning, so I kept it as one table
+              and let Power BI's date hierarchy handle the time axis.
+            </p>
+            <table class="spec">
+              <thead>
+                <tr><th>Table</th><th>Rows</th><th>Key columns</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>job_postings_flat</td><td>478,895</td><td>job_title_short, job_country, job_posted_date, job_schedule_type, job_via, salary_year_avg, salary_hour_avg, job_skills</td></tr>
+                <tr><td>Flags</td><td>3</td><td>job_work_from_home, job_no_degree_mention, job_health_insurance (true / false)</td></tr>
+                <tr><td>funnel_data</td><td>6</td><td>Stage, Applicants: a sample hiring funnel</td></tr>
+                <tr><td>waterfall_data</td><td>5</td><td>Comp, Amount: a sample pay package breakdown</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 HOW IT WAS BUILT -->
+      <section id="build" class="section">
+        <p class="kicker">04 · Methodology</p>
+        <h2>How it was built</h2>
+        <p class="lead">Five steps. Pick one to see the detail.</p>
+
+        <div class="steps" data-tabs>
+          <div class="step-tabs" role="tablist" aria-label="Build steps">
+            <button role="tab" aria-selected="true" aria-controls="step-1" id="tab-1"><b>01</b> Load</button>
+            <button role="tab" aria-selected="false" aria-controls="step-2" id="tab-2" tabindex="-1"><b>02</b> Visuals</button>
+            <button role="tab" aria-selected="false" aria-controls="step-3" id="tab-3" tabindex="-1"><b>03</b> Dashboard</button>
+            <button role="tab" aria-selected="false" aria-controls="step-4" id="tab-4" tabindex="-1"><b>04</b> Drill-through</button>
+            <button role="tab" aria-selected="false" aria-controls="step-5" id="tab-5" tabindex="-1"><b>05</b> Validate</button>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-1" aria-labelledby="tab-1">
+            <h3>Load and type the data</h3>
+            <p>
+              Nearly half a million rows is enough that types matter. In Power Query I
+              set the posted date to a true date-time, both salary columns to decimals
+              and the three yes/no columns to true/false, so that Power BI stores them
+              compactly and charts them correctly.
+            </p>
+            <ul>
+              <li>Kept <b>salary_year_avg</b> and <b>salary_hour_avg</b> separate. Converting hourly to yearly means guessing the hours, and the two groups are different kinds of jobs.</li>
+              <li>Used <b>job_title_short</b> (10 clean roles) for every chart, and left the free-text <b>job_title</b> for tooltips.</li>
+              <li>Kept two tiny hand-made tables for the funnel and waterfall examples, since those charts need staged data the postings don't have.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-2" aria-labelledby="tab-2" hidden>
+            <h3>Learn every visual on real data</h3>
+            <p>
+              Before designing the dashboard I built a practice page for each family of
+              Power BI visual, all on the same postings. That way the dashboard uses
+              each chart because it suits the question, not because it was the one I
+              knew.
+            </p>
+            <div class="measure-groups">
+              <div>
+                <h4>Comparison</h4>
+                <p>Column &amp; Bar · Line &amp; Area · Common Charts (pie, donut, treemap, scatter)</p>
+              </div>
+              <div>
+                <h4>Geography</h4>
+                <p>Map · Filled map · ArcGIS map</p>
+              </div>
+              <div>
+                <h4>Distribution and flow</h4>
+                <p>Ribbon · Waterfall · Funnel · Box-and-whisker (custom visual)</p>
+              </div>
+              <div>
+                <h4>Detail and control</h4>
+                <p>Tables &amp; matrix · Cards, gauge, KPI · Slicers · Key Influencers (AI)</p>
+              </div>
+            </div>
+            <p>
+              A Home page with a page navigator ties the twelve pages together, so the
+              report can be explored without the Power BI page tabs.
+            </p>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-3" aria-labelledby="tab-3" hidden>
+            <h3>Design the dashboard</h3>
+            <p>
+              One page, sliced by role. The top row answers “what does this pay?”, the
+              charts underneath answer “how much demand is there, and when?”
+            </p>
+            <ul>
+              <li><b>Median, not average</b>, for every salary card. A few very high salaries pull the average up.</li>
+              <li>A <b>star rating</b> measure turns the median salary into zero to five stars on a $75K–$150K scale, so roles can be compared at a glance.</li>
+              <li>The trend line uses the full <b>Year → Quarter → Month → Day</b> hierarchy, so you can drill from the year into any month.</li>
+              <li>A <b>scatter</b> of hourly against yearly median by role shows whether the two pay scales agree.</li>
+              <li>A <b>matrix</b> by role and quarter with a monthly <b>sparkline</b> fits the trend for every role into one table.</li>
+            </ul>
+<pre><code>Salary Star Rating =
+VAR __MAX_NUMBER_OF_STARS = 5
+VAR __MIN_RATED_VALUE = 75000
+VAR __MAX_RATED_VALUE = 150000
+VAR __BASE_VALUE = MEDIAN ( 'job_postings_flat'[salary_year_avg] )
+-- where the median sits between $75K and $150K, clamped to 0–1
+VAR __NORMALIZED_BASE_VALUE =
+    MIN ( MAX ( DIVIDE ( __BASE_VALUE - __MIN_RATED_VALUE,
+                         __MAX_RATED_VALUE - __MIN_RATED_VALUE ), 0 ), 1 )
+VAR __STAR_RATING = ROUND ( __NORMALIZED_BASE_VALUE * __MAX_NUMBER_OF_STARS, 0 )
+RETURN
+    IF ( NOT ISBLANK ( __BASE_VALUE ),
+        REPT ( UNICHAR ( 9733 ), __STAR_RATING )            -- ★
+            &amp; REPT ( UNICHAR ( 9734 ), __MAX_NUMBER_OF_STARS - __STAR_RATING ) )  -- ☆</code></pre>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-4" aria-labelledby="tab-4" hidden>
+            <h3>Add a drill-through page</h3>
+            <p>
+              Right-click any role on the dashboard and choose <b>Drill through</b>, or
+              use the button, and a detail page opens filtered to that role. It
+              answers the questions that only make sense one role at a time.
+            </p>
+            <ul>
+              <li>Two <b>gauges</b> show where the median yearly and hourly pay sit between that role's minimum and maximum, with the average as the target line.</li>
+              <li>Three <b>donuts</b>: share of postings that are remote, that don't mention a degree, and that offer health insurance.</li>
+              <li>A <b>map</b> sized by number of postings, with median salary in the tooltip.</li>
+              <li>A <b>treemap</b> of schedule types and a <b>bar chart</b> of the job boards the postings came from.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-5" aria-labelledby="tab-5" hidden>
+            <h3>Check the data before trusting it</h3>
+            <p>
+              Before writing anything up I went back to the raw rows. Four issues
+              change how the report should be read.
+            </p>
+            <ul>
+              <li>
+                <b>Salary is rare.</b> Only 20,335 postings (4.2%) give a yearly salary and
+                10,076 an hourly one. 80% of the yearly salaries are from the US, which
+                has only 29% of all postings. The pay figures describe the US market
+                more than the global one.
+              </li>
+              <li>
+                <b>“Sudan” isn't Sudan.</b> The country column comes from the search
+                location, not the job. The 10,688 “Sudan” postings are mostly listed as
+                “Anywhere” or in US cities like Dallas and Austin. They would make Sudan
+                the ninth-biggest market on the map.
+              </li>
+              <li>
+                <b>The same job board under many names.</b> “via LinkedIn” and
+                “LinkedIn” are separate values, and the column has 7,817 distinct
+                entries. Stripping the “via” prefix brings it down to 6,541 and makes
+                LinkedIn's real share clear: 36% of postings.
+              </li>
+              <li>
+                <b>Titles that promise the wrong thing.</b> On the dashboard, the bar
+                chart titled “What is the highest paying job in data?” plots the number of
+                postings, not pay; the salary version is on the Column &amp; Bar page. On
+                the drill-through page, the hourly gauge and the health-insurance donut
+                kept titles copied from their neighbours. These are the first fixes on
+                my list for the next version.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 DASHBOARD -->
+      <section id="dashboard" class="section">
+        <p class="kicker">05 · Visual analysis</p>
+        <h2>The report, page by page</h2>
+        <p class="lead">Screenshots from Power BI Desktop. Click any one to see it full size.</p>
+
+        <div class="gallery">
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/data-jobs/1-dashboard.png">
+              <img src="img/data-jobs/1-dashboard.png" alt="Data Jobs Dashboard page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Data Jobs Dashboard</b> Role slicer, median pay and star rating, the 2024 trend, demand by role, hourly against yearly pay, and a role × quarter matrix with sparklines.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/data-jobs/2-drill-through.png">
+              <img src="img/data-jobs/2-drill-through.png" alt="Job Title Drill Through page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Job Title Drill Through</b> One role in detail, here Data Engineer: pay gauges, remote / no-degree / insurance donuts, a world map, schedule types and job boards.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/data-jobs/3-home.png">
+              <img src="img/data-jobs/3-home.png" alt="Home page with page navigator" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Home</b> A page navigator for the twelve pages, so the report can be explored without the tab bar.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/data-jobs/4-uncommon-charts.png">
+              <img src="img/data-jobs/4-uncommon-charts.png" alt="Uncommon Charts page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Uncommon Charts</b> Ribbon, waterfall, funnel and box-and-whisker: the visuals that need their data shaped a particular way.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/data-jobs/5-column-bar.png">
+              <img src="img/data-jobs/5-column-bar.png" alt="Column and Bar page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Column &amp; Bar</b> Top-paying roles, pay by role in four countries, and which roles skip the degree, as counts and as 100% shares.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/data-jobs/6-cards.png">
+              <img src="img/data-jobs/6-cards.png" alt="Cards page" width="1280" height="720" loading="lazy" />
+            </button>
+            <figcaption><b>Cards</b> New card visual, gauge and KPI: three ways to show a single number and how it compares.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 06 FINDINGS -->
+      <section id="findings" class="section">
+        <p class="kicker">06 · Key findings</p>
+        <h2>What the data says</h2>
+
+        <figure class="chart-card">
+          <figcaption>
+            <b>Job postings by month, 2024</b>
+            <span>All roles and countries · hover a bar for the exact figure</span>
+          </figcaption>
+          <div class="bars" id="monthly-chart" style="--n: 12" role="group" aria-label="Monthly job postings bar chart. Highest: February at 55,336. Lowest: November at 13,719."></div>
+          <details>
+            <summary>Show as a table</summary>
+            <table class="spec" id="monthly-table">
+              <thead><tr><th>Month</th><th>Postings</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </details>
+        </figure>
+
+        <div class="chart-pair">
+          <figure class="chart-card">
+            <figcaption>
+              <b>Median yearly salary by role</b>
+              <span>20,335 postings that list a yearly salary</span>
+            </figcaption>
+            <ul class="hbars" id="salary-chart" aria-label="Median yearly salary by role"></ul>
+          </figure>
+          <figure class="chart-card">
+            <figcaption>
+              <b>Most requested skills</b>
+              <span>Share of all 478,895 postings that mention each skill</span>
+            </figcaption>
+            <ul class="hbars" id="skills-chart" aria-label="Most requested skills"></ul>
+          </figure>
+        </div>
+
+        <div class="findings">
+          <article class="finding">
+            <p class="big">+73% <small>senior DS over analyst</small></p>
+            <h3>Seniority and ML pay most</h3>
+            <p>
+              Senior Data Scientists ($155.5K) and ML Engineers ($155K) top the medians.
+              Data Analysts are lowest at $90K. Senior Data Analyst ($107K) still sits
+              below the entry-level Data Engineer ($126K).
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">2 skills <small>in half of all postings</small></p>
+            <h3>SQL and Python are the baseline</h3>
+            <p>
+              Python (51%) and SQL (50%) are far ahead of cloud skills (AWS 21%, Azure
+              20%). For analyst roles the order changes: SQL 47%, Excel 33%, Python 32%,
+              then Tableau and Power BI at about 24% each.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">27% <small>of postings are engineers</small></p>
+            <h3>Engineers are the most in demand</h3>
+            <p>
+              Data Engineer is the largest role with 128,994 postings, ahead of Data
+              Analyst (112,866) and Data Scientist (97,664). Add the senior titles and
+              engineering is a third of the market.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">+32% <small>remote ML engineers</small></p>
+            <h3>Remote pays more, except for analysts</h3>
+            <p>
+              Only 13% of postings are remote, and the remote ones pay more overall
+              ($130K vs $113K). Not for analysts, though: remote Data Analyst jobs pay
+              $85K against $90K on site, and remote Senior Data Analyst jobs pay less too.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">38.5% <small>of analyst postings</small></p>
+            <h3>Analyst roles are the most open</h3>
+            <p>
+              Over a third of Data Analyst and Data Engineer postings don't mention a
+              degree, and those postings pay only slightly less ($110K vs $114K median).
+              For Data Scientists it's 7%, and for ML Engineers 4%.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">−59% <small>Q4 vs Q1</small></p>
+            <h3>Postings fell through the year</h3>
+            <p>
+              156,645 postings in Q1 against 63,591 in Q4, with a low of 13,719 in
+              November. Some of that is hiring seasonality, but a fall this sharp may
+              also mean the data was collected differently late in the year.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 07 RECOMMENDATIONS -->
+      <section id="next" class="section">
+        <p class="kicker">07 · Recommendations</p>
+        <h2>What I'd do with this</h2>
+        <ol class="recs">
+          <li><b>Learn SQL and Python first.</b> They're in half of all postings, whatever the role. Everything else is second.</li>
+          <li><b>For analyst roles, pair them with a BI tool.</b> Excel, Tableau and Power BI each appear in a quarter to a third of analyst postings.</li>
+          <li><b>Treat engineering as the growth path.</b> It's the largest role and pays $36K more at the median than analysis.</li>
+          <li><b>Don't rule out roles over a degree.</b> A third of analyst and engineering postings don't ask for one, at almost the same pay.</li>
+          <li><b>Read the salary charts as US figures.</b> Four in five salaried postings are American, so check local data before using them elsewhere.</li>
+          <li><b>Clean the source before the next version.</b> Derive country from the job's location and normalise the job board names, then rebuild the map and job-board charts.</li>
+        </ol>
+      </section>
+
+      <!-- 08 LEARNINGS -->
+      <section id="learned" class="section">
+        <p class="kicker">08 · Reflection</p>
+        <h2>What I learned</h2>
+        <div class="trio">
+          <div>
+            <h3>Know the chart before you need it</h3>
+            <p>
+              Building a page for each visual type first meant I picked charts for the
+              dashboard on purpose: a scatter to compare two pay scales, gauges for one
+              value within a range, a matrix with sparklines for many trends at once.
+            </p>
+          </div>
+          <div>
+            <h3>Count what's missing</h3>
+            <p>
+              A median of $113K looks like a fact until you see that 96% of postings
+              have no salary. Now I check how many rows a number is actually based on
+              before I chart it.
+            </p>
+          </div>
+          <div>
+            <h3>Drill-through keeps pages simple</h3>
+            <p>
+              Moving the per-role detail to its own page let the dashboard stay
+              uncluttered. Each page answers one level of question, and the user
+              chooses when to go deeper.
+            </p>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="powerbi/data-jobs-analysis.pbix" download>Download the .pbix</a>
+          <a class="btn" href="index.html#projects">Back to all projects</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year">2026</span> Vinayak Agarwal</p>
+    </footer>
+
+    <dialog id="lightbox" aria-label="Screenshot, full size">
+      <button type="button" class="close" aria-label="Close">×</button>
+      <img alt="" />
+    </dialog>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      var root = document.documentElement;
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        var dark =
+          root.dataset.theme === 'dark' ||
+          (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+        var next = dark ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('theme', next);
+        } catch (e) {}
+      });
+
+      // Methodology tabs (arrow keys move between them).
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+      function selectTab(tab) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', on);
+          t.tabIndex = on ? 0 : -1;
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        });
+        tab.focus();
+      }
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { selectTab(tab); });
+        tab.addEventListener('keydown', function (e) {
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (d) selectTab(tabs[(i + d + tabs.length) % tabs.length]);
+        });
+      });
+
+      // Screenshot lightbox.
+      var box = document.getElementById('lightbox');
+      document.querySelectorAll('.zoom').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var img = box.querySelector('img');
+          img.src = b.dataset.src;
+          img.alt = b.querySelector('img').alt;
+          box.showModal();
+        });
+      });
+      box.addEventListener('click', function (e) {
+        if (e.target === box || e.target.classList.contains('close')) box.close();
+      });
+
+      // Monthly postings chart, counted from job_posted_date.
+      var months = [
+        ['January', 52924], ['February', 55336], ['March', 48385], ['April', 43799],
+        ['May', 45651], ['June', 41692], ['July', 50760], ['August', 46951],
+        ['September', 29806], ['October', 19041], ['November', 13719], ['December', 30831]
+      ];
+      var chart = document.getElementById('monthly-chart');
+      var tbody = document.querySelector('#monthly-table tbody');
+      var max = 56000;
+      var num = function (v) { return v.toLocaleString('en-US'); };
+      months.forEach(function (m) {
+        var col = document.createElement('div');
+        var h = (m[1] / max) * 100 + '%';
+        col.className = 'bar';
+        if (m[0] === 'February') col.dataset.note = 'Peak';
+        if (m[0] === 'November') col.dataset.note = 'Low';
+        col.tabIndex = 0;
+        col.style.setProperty('--h', h);
+        col.innerHTML =
+          '<span class="fill" style="height:' + h + '"></span>' +
+          '<span class="tip"><b>' + m[0] + ' 2024</b>' + num(m[1]) + ' postings</span>' +
+          '<span class="lbl">' + m[0].slice(0, 3) + '</span>';
+        chart.appendChild(col);
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + m[0] + '</td><td>' + num(m[1]) + '</td>';
+        tbody.appendChild(tr);
+      });
+
+      // Horizontal bar lists. `hi` marks the rows the findings talk about.
+      function hbars(id, rows, max, fmt) {
+        var ul = document.getElementById(id);
+        rows.forEach(function (r) {
+          var li = document.createElement('li');
+          if (r[2]) li.className = 'hi';
+          li.innerHTML =
+            '<span>' + r[0] + '</span>' +
+            '<span class="track"><span class="fill" style="width:' + (r[1] / max) * 100 + '%"></span></span>' +
+            '<span class="val">' + fmt(r[1]) + '</span>';
+          ul.appendChild(li);
+        });
+      }
+      hbars('salary-chart', [
+        ['Senior Data Scientist', 155500, 1], ['Machine Learning Engineer', 155000, 1],
+        ['Senior Data Engineer', 146500], ['Software Engineer', 145000],
+        ['Data Engineer', 126268], ['Data Scientist', 125000], ['Cloud Engineer', 113838],
+        ['Senior Data Analyst', 107310], ['Business Analyst', 95350], ['Data Analyst', 90000, 1]
+      ], 160000, function (v) { return '$' + Math.round(v / 1000) + 'K'; });
+      hbars('skills-chart', [
+        ['Python', 51.0, 1], ['SQL', 50.2, 1], ['AWS', 21.0], ['Azure', 19.6],
+        ['Tableau', 15.4], ['Spark', 15.0], ['R', 15.0], ['Excel', 15.0],
+        ['Power BI', 13.8], ['Java', 10.7]
+      ], 55, function (v) { return v.toFixed(1) + '%'; });
+    </script>
+  </body>
+</html>
