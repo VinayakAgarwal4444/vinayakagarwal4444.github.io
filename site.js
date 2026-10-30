@@ -9,7 +9,9 @@ document.getElementById('theme-toggle').addEventListener('click', function () {
   root.dataset.theme = next;
   try {
     localStorage.setItem('theme', next);
-  } catch (e) {}
+  } catch {
+    // Storage is blocked: the choice just won't be remembered.
+  }
 });
 
 // Project showcase: a spotlight that follows the cursor and a gentle 3D tilt

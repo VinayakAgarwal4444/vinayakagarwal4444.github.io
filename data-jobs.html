@@ -8,26 +8,28 @@
       content="Case study: a Power BI report on 478,895 data job postings from 2024. What pays, which skills are asked for, and where the data can't be trusted."
     />
     <title>Data Jobs Analysis · Vinayak Agarwal</title>
-    <link rel="stylesheet" href="style.css?v=20261030" />
+    <link rel="stylesheet" href="style.css?v=20261030b" />
     <script>
       // Apply the saved theme before first paint to avoid a flash.
       try {
         var t = localStorage.getItem('theme');
         if (t) document.documentElement.dataset.theme = t;
-      } catch (e) {}
+      } catch {
+        // Storage is blocked: fall back to the system theme.
+      }
     </script>
   </head>
 
   <body>
     <header class="site-header">
-      <a class="brand" href="index.html#projects">← All projects</a>
+      <a class="brand" href="index.html#projects">&larr; All projects</a>
       <nav class="case-nav" aria-label="Case study">
         <a href="#glance">Overview</a>
         <a href="#build">How</a>
         <a href="#dashboard">Dashboard</a>
         <a href="#findings">Findings</a>
         <button id="theme-toggle" type="button" aria-label="Toggle dark mode">
-          <span aria-hidden="true">◐</span>
+          <span aria-hidden="true">&#x25D0;</span>
         </button>
       </nav>
     </header>
@@ -55,7 +57,7 @@
           <a class="btn" href="#findings">Jump to findings</a>
         </div>
         <dl class="meta">
-          <div><dt>Period</dt><dd>Jan – Dec 2024</dd></div>
+          <div><dt>Period</dt><dd>Jan &ndash; Dec 2024</dd></div>
           <div><dt>Data</dt><dd>478,895 postings · 17 columns</dd></div>
           <div><dt>Scope</dt><dd>10 roles · 160 countries</dd></div>
           <div><dt>Report</dt><dd>12 pages · 79 visuals</dd></div>
@@ -259,13 +261,13 @@
           <div class="step-panel" role="tabpanel" id="step-3" aria-labelledby="tab-3" hidden>
             <h3>Design the dashboard</h3>
             <p>
-              One page, sliced by role. The top row answers “what does this pay?”, the
-              charts underneath answer “how much demand is there, and when?”
+              One page, sliced by role. The top row answers &ldquo;what does this pay?&rdquo;, the
+              charts underneath answer &ldquo;how much demand is there, and when?&rdquo;
             </p>
             <ul>
               <li><b>Median, not average</b>, for every salary card. A few very high salaries pull the average up.</li>
-              <li>A <b>star rating</b> measure turns the median salary into zero to five stars on a $75K–$150K scale, so roles can be compared at a glance.</li>
-              <li>The trend line uses the full <b>Year → Quarter → Month → Day</b> hierarchy, so you can drill from the year into any month.</li>
+              <li>A <b>star rating</b> measure turns the median salary into zero to five stars on a $75K&ndash;$150K scale, so roles can be compared at a glance.</li>
+              <li>The trend line uses the full <b>Year &rarr; Quarter &rarr; Month &rarr; Day</b> hierarchy, so you can drill from the year into any month.</li>
               <li>A <b>scatter</b> of hourly against yearly median by role shows whether the two pay scales agree.</li>
               <li>A <b>matrix</b> by role and quarter with a monthly <b>sparkline</b> fits the trend for every role into one table.</li>
               <li>Every visual sits on the same <b>16-pixel grid</b> as a white card on a light grey page, titled with the question it answers.</li>
@@ -275,15 +277,15 @@ VAR __MAX_NUMBER_OF_STARS = 5
 VAR __MIN_RATED_VALUE = 75000
 VAR __MAX_RATED_VALUE = 150000
 VAR __BASE_VALUE = MEDIAN ( 'job_postings_flat'[salary_year_avg] )
--- where the median sits between $75K and $150K, clamped to 0–1
+-- where the median sits between $75K and $150K, clamped to 0&ndash;1
 VAR __NORMALIZED_BASE_VALUE =
     MIN ( MAX ( DIVIDE ( __BASE_VALUE - __MIN_RATED_VALUE,
                          __MAX_RATED_VALUE - __MIN_RATED_VALUE ), 0 ), 1 )
 VAR __STAR_RATING = ROUND ( __NORMALIZED_BASE_VALUE * __MAX_NUMBER_OF_STARS, 0 )
 RETURN
     IF ( NOT ISBLANK ( __BASE_VALUE ),
-        REPT ( UNICHAR ( 9733 ), __STAR_RATING )            -- ★
-            &amp; REPT ( UNICHAR ( 9734 ), __MAX_NUMBER_OF_STARS - __STAR_RATING ) )  -- ☆</code></pre>
+        REPT ( UNICHAR ( 9733 ), __STAR_RATING )            -- &#x2605;
+            &amp; REPT ( UNICHAR ( 9734 ), __MAX_NUMBER_OF_STARS - __STAR_RATING ) )  -- &#x2606;</code></pre>
           </div>
 
           <div class="step-panel" role="tabpanel" id="step-4" aria-labelledby="tab-4" hidden>
@@ -315,30 +317,30 @@ RETURN
                 market more than the global one.
               </li>
               <li>
-                <b>“Sudan” wasn't Sudan (fixed).</b> The country column comes from the
-                search location, not the job. Of 10,688 “Sudan” postings, only 36
+                <b>&ldquo;Sudan&rdquo; wasn't Sudan (fixed).</b> The country column comes from the
+                search location, not the job. Of 10,688 &ldquo;Sudan&rdquo; postings, only 36
                 mention Sudan; the rest are in US cities like Dallas and Austin, or
-                “Anywhere”. A calculated column moves the US ones to the United States and
+                &ldquo;Anywhere&rdquo;. A calculated column moves the US ones to the United States and
                 leaves the location-less ones blank, instead of making Sudan the
                 ninth-biggest market on the map.
               </li>
               <li>
-                <b>One job board, many names (fixed).</b> “via LinkedIn” and “LinkedIn”
+                <b>One job board, many names (fixed).</b> &ldquo;via LinkedIn&rdquo; and &ldquo;LinkedIn&rdquo;
                 were separate values, among 7,817 distinct entries. A second calculated
-                column strips the “via” prefix, which brings it down to 6,541 and shows
+                column strips the &ldquo;via&rdquo; prefix, which brings it down to 6,541 and shows
                 LinkedIn's real share: 36% of postings.
               </li>
               <li>
                 <b>A count that skipped rows (fixed).</b> Both matrices counted postings
                 by country, so any posting without a country went missing from the
-                “Job Count” column. They now count by job title, which every row has.
+                &ldquo;Job Count&rdquo; column. They now count by job title, which every row has.
               </li>
               <li>
                 <b>Titles and labels (fixed).</b> The dashboard bar chart was titled
-                “What is the highest paying job in data?” but plots the number of postings,
+                &ldquo;What is the highest paying job in data?&rdquo; but plots the number of postings,
                 so its title now says so. Two drill-through titles were copied from their
-                neighbours, typos like “Yealy”, “Salarry”, “Titlle” and “haave” are gone,
-                and raw field names like “Count of job_via” now read as plain labels.
+                neighbours, typos like &ldquo;Yealy&rdquo;, &ldquo;Salarry&rdquo;, &ldquo;Titlle&rdquo; and &ldquo;haave&rdquo; are gone,
+                and raw field names like &ldquo;Count of job_via&rdquo; now read as plain labels.
               </li>
             </ul>
           </div>
@@ -401,7 +403,7 @@ RETURN
             <b>Job postings by month, 2024</b>
             <span>All roles and countries · hover a bar for the exact figure</span>
           </figcaption>
-          <div class="bars" id="monthly-chart" style="--n: 12" role="group" aria-label="Monthly job postings bar chart. Highest: February at 55,336. Lowest: November at 13,719."></div>
+          <ul class="bars" id="monthly-chart" style="--n: 12" aria-label="Monthly job postings bar chart. Highest: February at 55,336. Lowest: November at 13,719."></ul>
           <details>
             <summary>Show as a table</summary>
             <table class="spec" id="monthly-table">
@@ -475,7 +477,7 @@ RETURN
             </p>
           </article>
           <article class="finding">
-            <p class="big">−59% <small>Q4 vs Q1</small></p>
+            <p class="big">&minus;59% <small>Q4 vs Q1</small></p>
             <h3>Postings fell through the year</h3>
             <p>
               156,645 postings in Q1 against 63,591 in Q4, with a low of 13,719 in
@@ -558,7 +560,9 @@ RETURN
         root.dataset.theme = next;
         try {
           localStorage.setItem('theme', next);
-        } catch (e) {}
+        } catch {
+          // Storage is blocked: the choice just won't be remembered.
+        }
       });
 
       // Methodology tabs (arrow keys move between them).
@@ -575,7 +579,7 @@ RETURN
       tabs.forEach(function (tab, i) {
         tab.addEventListener('click', function () { selectTab(tab); });
         tab.addEventListener('keydown', function (e) {
-          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          var d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
           if (d) selectTab(tabs[(i + d + tabs.length) % tabs.length]);
         });
       });
@@ -605,7 +609,7 @@ RETURN
       var max = 56000;
       var num = function (v) { return v.toLocaleString('en-US'); };
       months.forEach(function (m) {
-        var col = document.createElement('div');
+        var col = document.createElement('li');
         var h = (m[1] / max) * 100 + '%';
         col.className = 'bar';
         if (m[0] === 'February') col.dataset.note = 'Peak';
