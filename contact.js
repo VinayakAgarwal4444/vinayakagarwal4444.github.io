@@ -61,7 +61,7 @@
       return;
     }
     if (!f.email.checkValidity()) {
-      setStatus('That email address doesn’t look right.', 'error');
+      setStatus('That email address doesn\u2019t look right.', 'error');
       f.email.focus();
       return;
     }
@@ -77,7 +77,7 @@
     }
 
     button.disabled = true;
-    setStatus('Sending…');
+    setStatus('Sending\u2026');
 
     fetch(endpoint, {
       method: 'POST',
@@ -103,7 +103,7 @@
         setStatus('Thanks! Your message is on its way to my inbox.', 'success');
       })
       .catch(function (err) {
-        var text = err instanceof TypeError ? 'Couldn’t reach the server. Please try again later.' : err.message;
+        var text = err instanceof TypeError ? 'Couldn\u2019t reach the server. Please try again later.' : err.message;
         setStatus(text, 'error');
       })
       .finally(function () {

@@ -419,7 +419,7 @@ main,
 .badge.live {
   background: color-mix(in srgb, #10b981 12%, transparent);
   border-color: color-mix(in srgb, #10b981 40%, transparent);
-  color: #059669;
+  color: #047857;
 }
 
 :root[data-theme='dark'] .badge.live { color: #34d399; }
@@ -1099,12 +1099,12 @@ main,
 
 .form-status.success {
   background: color-mix(in srgb, #16a34a 12%, transparent);
-  color: #15803d;
+  color: #166534;
 }
 
 .form-status.error {
   background: color-mix(in srgb, #dc2626 10%, transparent);
-  color: #b91c1c;
+  color: #991b1b;
 }
 
 :root[data-theme='dark'] .form-status.success { color: #4ade80; }
@@ -1600,6 +1600,8 @@ pre code {
   gap: 2px;
   grid-template-columns: repeat(var(--n, 15), 1fr);
   height: 220px;
+  list-style: none;
+  padding: 0;
   margin: 2.25rem 0 2.6rem;
 }
 
