@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Hobby projects by Vinayak Agarwal: things built in spare time to try out new tools and ideas."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Hobby projects · Vinayak Agarwal</title>
+    <link rel="stylesheet" href="style.css?v=20261101" />
+    <script src="theme-init.js?v=20261101"></script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html">Vinayak Agarwal</a>
+      <nav aria-label="Primary">
+        <a href="index.html#about">About</a>
+        <a href="index.html#projects">Projects</a>
+        <a href="hobby.html" aria-current="page">Hobbies</a>
+        <a href="index.html#connect">Connect</a>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <span aria-hidden="true">&#x25D0;</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="section projects">
+        <p class="kicker">On the side</p>
+        <h1>Hobby projects</h1>
+        <p class="lead">Things I build in my own time to try out new tools and ideas.</p>
+
+        <article class="showcase" data-spotlight>
+          <a class="frame" href="market-briefing.html" aria-label="Market Briefing case study" data-tilt>
+            <span class="frame-bar" aria-hidden="true">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="url">Streamlit · Market Briefing</span>
+            </span>
+            <img class="shot-main" src="img/market-briefing/thumb-briefing.webp" alt="Market Briefing home page with live prices and a cited news briefing" width="1125" height="633" />
+            <img class="shot-float" src="img/market-briefing/thumb-ask.webp" alt="" width="1125" height="633" />
+          </a>
+          <div class="showcase-body">
+            <div class="badges">
+              <span class="badge live"><span class="pulse" aria-hidden="true"></span>Live</span>
+              <span class="badge">AI · Retrieval</span>
+              <span class="badge">Evaluated</span>
+            </div>
+            <p class="index" aria-hidden="true">01</p>
+            <h3>Market Briefing</h3>
+            <p class="summary">
+              A chat assistant for the last 48 hours of financial news. Every claim links to
+              its article, prices come from live data, and it says so when nothing was reported.
+              Tested on 40 questions and two models, which changed how it searches.
+            </p>
+            <ul class="metrics">
+              <li><b>28/28</b><span>answered with the news</span></li>
+              <li><b>8/28</b><span>without it</span></li>
+              <li><b>11</b><span>news feeds</span></li>
+            </ul>
+            <ul class="tags"><li>Python</li><li>LangChain</li><li>RAG</li><li>Groq</li><li>Streamlit</li></ul>
+            <div class="showcase-cta">
+              <a class="btn primary" href="market-briefing.html">Read the case study <span aria-hidden="true">&rarr;</span></a>
+              <a class="btn ghost" href="https://ta2cjxqtjcczdu4iiihidv.streamlit.app/" target="_blank" rel="noopener">Open live app <span aria-hidden="true">&#8599;</span></a>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year">2026</span> Vinayak Agarwal</p>
+    </footer>
+
+    <script src="site.js?v=20261101"></script>
+  </body>
+</html>
