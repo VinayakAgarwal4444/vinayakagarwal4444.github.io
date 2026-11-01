@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Case study: a chat assistant for the last 48 hours of financial news. Every claim cited, prices from live data, and an evaluation that changed the design."
+    />
+    <title>Market Briefing · Vinayak Agarwal</title>
+    <link rel="stylesheet" href="style.css?v=20261101" />
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('theme');
+        if (t) document.documentElement.dataset.theme = t;
+      } catch {
+        // Storage is blocked: fall back to the system theme.
+      }
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <a class="brand" href="hobby.html">&larr; Hobby projects</a>
+      <nav class="case-nav" aria-label="Case study">
+        <a href="#glance">Overview</a>
+        <a href="#build">How</a>
+        <a href="#app">App</a>
+        <a href="#evaluation">Evaluation</a>
+        <button id="theme-toggle" type="button" aria-label="Toggle dark mode">
+          <span aria-hidden="true">&#x25D0;</span>
+        </button>
+      </nav>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero case-hero">
+        <p class="eyebrow">Case study · AI · Retrieval</p>
+        <h1>Market Briefing</h1>
+        <p class="lead">
+          A chat assistant for the last 48 hours of financial news. Ask what moved
+          markets and why, and every claim in the answer links to the article it came
+          from. Prices come from a live market feed, never from the model, and when
+          the news doesn't cover a question it says so instead of guessing.
+        </p>
+        <ul class="tags">
+          <li>Python</li>
+          <li>LangChain</li>
+          <li>RAG</li>
+          <li>Hybrid search</li>
+          <li>Groq · gpt-oss-20b</li>
+          <li>Ollama · Llama 3.1</li>
+          <li>Streamlit</li>
+          <li>Evaluation</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="https://ta2cjxqtjcczdu4iiihidv.streamlit.app/" target="_blank" rel="noopener">Open the live app</a>
+          <a class="btn" href="https://github.com/VinayakAgarwal4444/Market-briefing-asst" target="_blank" rel="noopener">Code on GitHub</a>
+        </div>
+        <dl class="meta">
+          <div><dt>News</dt><dd>11 free feeds · last 48 hours</dd></div>
+          <div><dt>Prices</dt><dd>Yahoo Finance, live</dd></div>
+          <div><dt>Models</dt><dd>gpt-oss-20b hosted · Llama 3.1 8B local</dd></div>
+          <div><dt>Tested on</dt><dd>40 questions · 2 models</dd></div>
+        </dl>
+        <figure class="shot hero-shot">
+          <button type="button" class="zoom" data-src="img/market-briefing/briefing.webp">
+            <img
+              src="img/market-briefing/briefing.webp"
+              alt="Market Briefing home page: a strip of live prices for the S&amp;P 500, Nasdaq, Dow, VIX, 10-year yield, oil, gold, EUR/USD and Bitcoin, above a cited summary of the five biggest stories of the last 24 hours."
+              width="1280"
+              height="1161"
+            />
+          </button>
+        </figure>
+      </section>
+
+      <!-- 01 AT A GLANCE -->
+      <section id="glance" class="section">
+        <p class="kicker">01 · At a glance</p>
+        <h2>The short version</h2>
+        <div class="trio">
+          <div>
+            <h3>The problem</h3>
+            <p>
+              A language model can't know what happened yesterday. Asked about this
+              week's markets, it either refuses or answers confidently from stale
+              training data, and in finance a confident wrong number is the worst
+              possible answer.
+            </p>
+          </div>
+          <div>
+            <h3>What I built</h3>
+            <p>
+              A pipeline that reads eleven news feeds every 20 minutes, groups articles
+              into stories and finds the ones that answer a question. The model only
+              has to read and cite; prices, advice requests and citation checks are
+              handled in code.
+            </p>
+          </div>
+          <div>
+            <h3>What I found</h3>
+            <p>
+              With the news, the model got every expected fact in 28 of 28 answers;
+              without it, 8. Measuring also killed my most obvious idea: ranking
+              fresher stories higher made search worse, so the app doesn't do it.
+            </p>
+          </div>
+        </div>
+
+        <ul class="stats">
+          <li><strong>28/28</strong><span>Answered with the news</span></li>
+          <li><strong>8/28</strong><span>Same model without it</span></li>
+          <li><strong>8/8</strong><span>Said &ldquo;nothing reported&rdquo; when true</span></li>
+          <li><strong>0/40</strong><span>Answers citing a source it wasn't given</span></li>
+          <li><strong>11</strong><span>News feeds</span></li>
+          <li><strong>~5 s</strong><span>Per answer, live</span></li>
+        </ul>
+      </section>
+
+      <!-- 02 ARCHITECTURE -->
+      <section id="architecture" class="section">
+        <p class="kicker">02 · Architecture</p>
+        <h2>The model reads; the code decides</h2>
+        <div class="split">
+          <figure class="diagram">
+            <svg viewBox="0 0 460 530" role="img" aria-labelledby="arch-title">
+              <title id="arch-title">
+                Eleven RSS feeds are cleaned and stored in SQLite with their embeddings.
+                Articles are grouped into stories, and a question runs a hybrid search
+                over them. The matching stories and live Yahoo Finance quotes go into the
+                prompt; the model's answer is checked in code before Streamlit shows it.
+              </title>
+              <g class="links">
+                <line x1="130" y1="72" x2="130" y2="92" />
+                <line x1="130" y1="144" x2="130" y2="164" />
+                <line x1="130" y1="216" x2="130" y2="236" />
+                <line x1="130" y1="288" x2="130" y2="308" />
+                <line x1="130" y1="360" x2="130" y2="380" />
+                <line x1="130" y1="432" x2="130" y2="452" />
+                <line x1="260" y1="262" x2="230" y2="262" />
+                <line x1="260" y1="334" x2="230" y2="334" />
+              </g>
+              <g class="node">
+                <rect x="30" y="20" width="200" height="52" rx="10" />
+                <text x="130" y="42">11 RSS feeds</text>
+                <text x="130" y="60" class="sub">CNBC · FT · BBC · Fed · ECB</text>
+              </g>
+              <g class="node">
+                <rect x="30" y="92" width="200" height="52" rx="10" />
+                <text x="130" y="114">SQLite</text>
+                <text x="130" y="132" class="sub">rolling 72 h · embeddings</text>
+              </g>
+              <g class="node">
+                <rect x="30" y="164" width="200" height="52" rx="10" />
+                <text x="130" y="186">Stories</text>
+                <text x="130" y="204" class="sub">same event, many outlets</text>
+              </g>
+              <g class="node">
+                <rect x="30" y="236" width="200" height="52" rx="10" />
+                <text x="130" y="258">Hybrid search</text>
+                <text x="130" y="276" class="sub">BM25 + embeddings</text>
+              </g>
+              <g class="node fact">
+                <rect x="30" y="308" width="200" height="52" rx="10" />
+                <text x="130" y="330">Language model</text>
+                <text x="130" y="348" class="sub">numbered stories in, citations out</text>
+              </g>
+              <g class="node">
+                <rect x="30" y="380" width="200" height="52" rx="10" />
+                <text x="130" y="402">Checks in code</text>
+                <text x="130" y="420" class="sub">citations · numbers · advice</text>
+              </g>
+              <g class="node">
+                <rect x="30" y="452" width="200" height="52" rx="10" />
+                <text x="130" y="474">Streamlit</text>
+                <text x="130" y="492" class="sub">briefing · chat · sources</text>
+              </g>
+              <g class="node">
+                <rect x="260" y="236" width="180" height="52" rx="10" />
+                <text x="350" y="258">Question</text>
+                <text x="350" y="276" class="sub">plus the last two turns</text>
+              </g>
+              <g class="node">
+                <rect x="260" y="308" width="180" height="52" rx="10" />
+                <text x="350" y="330">Yahoo Finance</text>
+                <text x="350" y="348" class="sub">live quotes, cited [M]</text>
+              </g>
+            </svg>
+          </figure>
+          <div>
+            <p>
+              Everything the model is trusted with is reading and summarising. The
+              stories it may use are numbered <b>[1]</b>, <b>[2]</b>&hellip;; prices it may
+              quote arrive in a separate block cited <b>[M]</b>. After it answers, code
+              checks that every citation points at something it was given and that
+              every number appears in a source, and the app warns under any answer
+              that fails.
+            </p>
+            <p>
+              Advice is handled the same way. &ldquo;Should I buy&hellip;?&rdquo; is caught by a
+              pattern before the model sees it, the app shows a fixed notice, and the
+              model is asked the neutral version: what has been reported?
+            </p>
+            <table class="spec">
+              <thead>
+                <tr><th>Part</th><th>Built with</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Ingest</td><td>feedparser, parallel fetch, SQLite</td></tr>
+                <tr><td>Embeddings</td><td>fastembed (bge-small, ONNX on CPU)</td></tr>
+                <tr><td>Search</td><td>rank-bm25 + NumPy, reciprocal-rank fusion</td></tr>
+                <tr><td>Model</td><td>LangChain; Groq gpt-oss-20b or Ollama Llama 3.1 8B</td></tr>
+                <tr><td>Prices</td><td>yfinance</td></tr>
+                <tr><td>App</td><td>Streamlit on Streamlit Community Cloud</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 HOW IT WAS BUILT -->
+      <section id="build" class="section">
+        <p class="kicker">03 · Methodology</p>
+        <h2>How it was built</h2>
+        <p class="lead">Five steps. Pick one to see the detail.</p>
+
+        <div class="steps" data-tabs>
+          <div class="step-tabs" role="tablist" aria-label="Build steps">
+            <button role="tab" aria-selected="true" aria-controls="step-1" id="tab-1"><b>01</b> Ingest</button>
+            <button role="tab" aria-selected="false" aria-controls="step-2" id="tab-2" tabindex="-1"><b>02</b> Stories</button>
+            <button role="tab" aria-selected="false" aria-controls="step-3" id="tab-3" tabindex="-1"><b>03</b> Search</button>
+            <button role="tab" aria-selected="false" aria-controls="step-4" id="tab-4" tabindex="-1"><b>04</b> Answer</button>
+            <button role="tab" aria-selected="false" aria-controls="step-5" id="tab-5" tabindex="-1"><b>05</b> Evaluate</button>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-1" aria-labelledby="tab-1">
+            <h3>Read the news, keep only what's needed</h3>
+            <p>
+              Eleven free RSS feeds are read in parallel: three from CNBC, plus
+              MarketWatch, the FT, the BBC, the Guardian, Nasdaq, Seeking Alpha, the
+              Federal Reserve and the ECB. A news API was out: NewsAPI's free plan is
+              a day behind, which defeats the point.
+            </p>
+            <ul>
+              <li><b>Headline, summary and link only.</b> Articles are never stored, so every answer sends readers back to the publisher.</li>
+              <li><b>Cleaned on the way in:</b> tracking parameters, inline CSS and boilerplate like &ldquo;Continue reading&rdquo; are stripped, and a summary that just repeats the headline is dropped.</li>
+              <li><b>Embedded once.</b> Each item's vector is stored in SQLite next to it, so a refresh only embeds what's new. Anything older than 72 hours is pruned.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-2" aria-labelledby="tab-2" hidden>
+            <h3>Group articles into stories</h3>
+            <p>
+              The same event is reported by five outlets within an hour. Without
+              grouping, one story fills every search result. Articles whose headlines
+              are at least 0.8 similar become one story, which the app ranks and cites
+              as a unit.
+            </p>
+            <ul>
+              <li><b>Headlines, not summaries.</b> My first version compared summaries, and a Guardian live blog that rounds up the whole day merged with every story it mentioned, including an unrelated crypto hack.</li>
+              <li><b>A ticker guard.</b> Two earnings headlines differing only in the company, such as (CVCO) and (CVLG), scored as near-identical. Titles naming different tickers are never merged.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-3" aria-labelledby="tab-3" hidden>
+            <h3>Find the stories that answer the question</h3>
+            <p>
+              Keyword search (BM25) catches exact names like &ldquo;Okta&rdquo; or &ldquo;Series I
+              bond&rdquo;; embeddings catch paraphrases, so &ldquo;chip stocks&rdquo; finds
+              &ldquo;semiconductor shares&rdquo;. The two rankings are merged with reciprocal-rank
+              fusion.
+            </p>
+            <ul>
+              <li><b>A similarity floor</b> stops loosely related stories reaching the model. That floor is what makes &ldquo;nothing was reported&rdquo; possible.</li>
+              <li><b>Abbreviations are expanded</b> (&ldquo;ECB&rdquo; also searches &ldquo;European Central Bank&rdquo;). Without it, search missed the ECB's own rate decision.</li>
+              <li><b>Tickers and names are spotted</b> (&ldquo;Intel&rdquo;, &ldquo;$AMD&rdquo;, &ldquo;the S&amp;P 500&rdquo;) and their live quotes fetched for the answer.</li>
+              <li><b>Exact search, no vector database.</b> A few hundred headlines fit in one matrix, so FAISS would add a dependency and buy nothing.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-4" aria-labelledby="tab-4" hidden>
+            <h3>Answer, then check the answer</h3>
+            <p>
+              The prompt holds the numbered stories, the quotes and eight rules: cite
+              every sentence, use no number that isn't in the sources, never advise.
+              A small model doesn't follow all eight every time, so the important ones
+              are also enforced after it answers.
+            </p>
+            <ul>
+              <li><b>No stories, no model call.</b> If search finds nothing, the app says so without asking the model, which can't then invent something.</li>
+              <li><b>Citations checked.</b> Any tag pointing at nothing it was given is flagged under the answer.</li>
+              <li><b>Numbers checked.</b> Every figure in the answer must appear in its sources; the app warns about any that doesn't.</li>
+              <li><b>Follow-ups.</b> &ldquo;What about AMD?&rdquo; is searched together with the previous question, but a complete question about another company isn't.</li>
+            </ul>
+          </div>
+
+          <div class="step-panel" role="tabpanel" id="step-5" aria-labelledby="tab-5" hidden>
+            <h3>Test it on news that can't change</h3>
+            <p>
+              Live news changes every few minutes, so I froze one day of it (137
+              stories, 159 articles) and wrote 40 questions against it. The search
+              settings and both models were measured on that snapshot.
+            </p>
+            <ul>
+              <li><b>28 answerable</b>, each with the story that answers it and the facts the answer must contain.</li>
+              <li><b>8 uncovered:</b> plausible questions the day's news doesn't answer, like the Bank of Japan or an Nvidia stock split. The right answer is &ldquo;nothing reported&rdquo;.</li>
+              <li><b>4 advice requests</b>, like &ldquo;Should I buy Intel stock now?&rdquo;</li>
+              <li><b>A closed-book baseline:</b> the same questions to the same model with no news, to show what retrieval adds.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 THE APP -->
+      <section id="app" class="section">
+        <p class="kicker">04 · The app</p>
+        <h2>Page by page</h2>
+        <p class="lead">Screenshots from the live app. Click any one to see it full size.</p>
+
+        <div class="gallery">
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/market-briefing/ask.webp">
+              <img src="img/market-briefing/ask.webp" alt="Answer to 'Why did Intel stock fall?': a live Intel quote card down 28.58%, a cited answer, and the sources panel" width="1280" height="800" loading="lazy" />
+            </button>
+            <figcaption><b>A cited answer</b> The live quote comes from Yahoo Finance, the answer from the stories, and every citation links to the article.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/market-briefing/advice.webp">
+              <img src="img/market-briefing/advice.webp" alt="Answer to 'Should I sell my Alphabet shares?': a no-advice notice, the Alphabet quote, and a cited summary of the news" width="1280" height="800" loading="lazy" />
+            </button>
+            <figcaption><b>An advice request</b> Caught in code: a fixed notice, then what was reported, with each view attributed.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/market-briefing/uncovered.webp">
+              <img src="img/market-briefing/uncovered.webp" alt="Answer to 'What did the Bank of Japan decide?': Nothing in the last 48 hours of coverage addresses that." width="1280" height="800" loading="lazy" />
+            </button>
+            <figcaption><b>Nothing reported</b> The Bank of Japan wasn't in the news, so the app says so rather than answer from memory.</figcaption>
+          </figure>
+          <figure class="shot">
+            <button type="button" class="zoom" data-src="img/market-briefing/stories.webp">
+              <img src="img/market-briefing/stories.webp" alt="Top stories page: the most covered stories of the last 48 hours, each with its outlets and article count" width="1280" height="800" loading="lazy" />
+            </button>
+            <figcaption><b>Top stories</b> Every story in the window, ranked by how many outlets covered it, filterable by outlet.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- 05 EVALUATION -->
+      <section id="evaluation" class="section">
+        <p class="kicker">05 · Evaluation</p>
+        <h2>What the numbers say</h2>
+
+        <div class="chart-pair">
+          <figure class="chart-card">
+            <figcaption>
+              <b>Answers with every expected fact</b>
+              <span>28 answerable questions on the frozen snapshot</span>
+            </figcaption>
+            <ul class="hbars" aria-label="Answers with every expected fact, out of 28">
+              <li class="hi"><span>Llama, with news</span><span class="track"><span class="fill" style="width: 100%"></span></span><span class="val">28/28</span></li>
+              <li class="hi"><span>gpt-oss, with news</span><span class="track"><span class="fill" style="width: 96.4%"></span></span><span class="val">27/28</span></li>
+              <li><span>Llama, no news</span><span class="track"><span class="fill" style="width: 28.6%"></span></span><span class="val">8/28</span></li>
+              <li><span>gpt-oss, no news</span><span class="track"><span class="fill" style="width: 28.6%"></span></span><span class="val">8/28</span></li>
+            </ul>
+          </figure>
+          <figure class="chart-card">
+            <figcaption>
+              <b>Right story ranked first</b>
+              <span>Search alone, no model · 28 answerable questions</span>
+            </figcaption>
+            <ul class="hbars" aria-label="Questions whose correct story was ranked first, out of 28">
+              <li class="hi"><span>Hybrid (the app)</span><span class="track"><span class="fill" style="width: 96.4%"></span></span><span class="val">27/28</span></li>
+              <li><span>Embeddings only</span><span class="track"><span class="fill" style="width: 92.9%"></span></span><span class="val">26/28</span></li>
+              <li><span>Keywords only</span><span class="track"><span class="fill" style="width: 92.9%"></span></span><span class="val">26/28</span></li>
+              <li class="hi"><span>Hybrid + recency</span><span class="track"><span class="fill" style="width: 75%"></span></span><span class="val">21/28</span></li>
+            </ul>
+          </figure>
+        </div>
+
+        <div class="findings">
+          <article class="finding">
+            <p class="big">8/28 <small>without the news</small></p>
+            <h3>Retrieval is the product</h3>
+            <p>
+              Closed book, both models got every fact in only 8 of 28 answers. Llama
+              admitted it lacked current information once; gpt-oss never did. The rest
+              were confident answers from stale or invented facts.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">27 &rarr; 21 <small>ranked first</small></p>
+            <h3>Fresher wasn't better</h3>
+            <p>
+              Boosting recent stories seemed obviously right for news. Measured, it
+              pushed correct day-old stories down. Even a 5% weight cost two first
+              places, so search doesn't use one; the 48-hour window keeps it recent.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">6.6 &rarr; 3.0 <small>stories of noise</small></p>
+            <h3>Keywords let noise through</h3>
+            <p>
+              On uncovered questions, hybrid search first passed twice as many stories
+              to the model as embeddings alone. Making keyword matches respect the
+              similarity floor halved the noise with no loss of recall.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">8/8 <small>both models</small></p>
+            <h3>It says when it doesn't know</h3>
+            <p>
+              Every uncovered question got &ldquo;nothing in the last 48 hours of
+              coverage addresses that&rdquo;, and no answerable question was wrongly
+              refused.
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">4/4 <small>both models</small></p>
+            <h3>No advice</h3>
+            <p>
+              All four advice requests were caught in code and answered with what was
+              reported. I read each answer, because one passed the automated check
+              while still saying &ldquo;it's a buy&rdquo; (see below).
+            </p>
+          </article>
+          <article class="finding">
+            <p class="big">0/40 <small>both models</small></p>
+            <h3>No invented sources or figures</h3>
+            <p>
+              No answer cited a story it wasn't given or stated a number found in none
+              of its sources. That is a result for this run, not a guarantee, which is
+              why both checks also run live.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 06 CHALLENGES -->
+      <section id="challenges" class="section">
+        <p class="kicker">06 · Challenges</p>
+        <h2>What reading the answers found</h2>
+        <p class="lead">
+          The scores were high from early on. Reading the answers themselves turned up
+          problems the scores missed, and each one is now handled in code.
+        </p>
+        <ol class="recs">
+          <li><b>An invented story.</b> After correctly saying &ldquo;nothing was reported&rdquo;, the model was allowed to point to the closest related story, and made one up: a Netflix quote cited as [1] when it had been given no stories at all. Now the model isn't called when search finds nothing, and only cited sentences survive after a &ldquo;nothing reported&rdquo;.</li>
+          <li><b>An invented figure.</b> A GDP answer added &ldquo;better than the expected 2.8%&rdquo;, a number in none of its sources. Every answer is now checked for numbers its sources don't contain.</li>
+          <li><b>A retired model.</b> The day I deployed, Groq had already retired Llama 3.1 8B and the app crashed on its first answer. I moved to gpt-oss-20b, made provider errors show a message instead of a crash, and ran the full evaluation again rather than assume the scores carried over.</li>
+          <li><b>A new model, new habits.</b> gpt-oss sometimes cites with &#12304;1&#12305; instead of [1], which left citations unlinked and unchecked; they're now converted first. It also summed analysts' views up as &ldquo;the consensus is that Amazon is still a buy&rdquo;: attributed, so the keyword check passed it, but still a recommendation. Advice questions now forbid that kind of verdict.</li>
+          <li><b>A bug in my own test.</b> A correct answer failed because gpt-oss wrote &ldquo;North&#8209;Korean&rdquo; with a non-breaking hyphen. The fact check now ignores typography, and the write-up says so.</li>
+        </ol>
+      </section>
+
+      <!-- 07 LIMITS -->
+      <section id="limits" class="section">
+        <p class="kicker">07 · Limits</p>
+        <h2>What the checks still miss</h2>
+        <ol class="recs">
+          <li><b>A real number, wrongly used.</b> The briefing at the top of this page says Intel's fall wiped &ldquo;roughly $12bn off the company's market value&rdquo;. The source said $12 billion off <em>the government's stake</em>; the company lost about $140 billion. The number check passed it, because $12 billion is in a source. It can confirm a figure exists, not that it's attached to the right thing.</li>
+          <li><b>Answers without citations.</b> gpt-oss occasionally writes a correct answer with no citation tags at all. The app now says so under the answer instead of letting it look sourced, but the reader has to open the sources themselves.</li>
+          <li><b>A small test.</b> 40 questions on one day's news, and the search thresholds were tuned on that same set. The honest next step is a second snapshot from another day, scored without re-tuning.</li>
+          <li><b>Headlines and summaries only.</b> The model sees a sentence or two per article, enough for &ldquo;what happened&rdquo; but not for detailed analysis.</li>
+        </ol>
+      </section>
+
+      <!-- 08 LEARNINGS -->
+      <section id="learned" class="section">
+        <p class="kicker">08 · Reflection</p>
+        <h2>What I learned</h2>
+        <div class="trio">
+          <div>
+            <h3>Measure the obvious idea</h3>
+            <p>
+              The recency boost was the first thing I'd have added to any news search,
+              and it made ranking worse. Without a fixed test set I'd have shipped it
+              and never known.
+            </p>
+          </div>
+          <div>
+            <h3>Read the answers, not just the scores</h3>
+            <p>
+              An invented story, an invented figure and advice dressed up as a summary
+              all passed the metrics I had at the time. Each one became a new check
+              only because I read every answer.
+            </p>
+          </div>
+          <div>
+            <h3>Put the rules in code</h3>
+            <p>
+              A small model told &ldquo;never give advice&rdquo; and &ldquo;cite every sentence&rdquo;
+              mostly complies. Mostly isn't enough for finance, so what must always
+              hold is enforced after it answers, and survives a change of model.
+            </p>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="https://ta2cjxqtjcczdu4iiihidv.streamlit.app/" target="_blank" rel="noopener">Open the live app</a>
+          <a class="btn" href="https://github.com/VinayakAgarwal4444/Market-briefing-asst" target="_blank" rel="noopener">Code on GitHub</a>
+          <a class="btn" href="hobby.html">Back to hobby projects</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year">2026</span> Vinayak Agarwal</p>
+    </footer>
+
+    <dialog id="lightbox" aria-label="Screenshot, full size">
+      <button type="button" class="close" aria-label="Close">×</button>
+      <img alt="" />
+    </dialog>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      var root = document.documentElement;
+      document.getElementById('theme-toggle').addEventListener('click', function () {
+        var dark =
+          root.dataset.theme === 'dark' ||
+          (!root.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+        var next = dark ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('theme', next);
+        } catch {
+          // Storage is blocked: the choice just won't be remembered.
+        }
+      });
+
+      // Methodology tabs (arrow keys move between them).
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+      function selectTab(tab) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', on);
+          t.tabIndex = on ? 0 : -1;
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        });
+        tab.focus();
+      }
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { selectTab(tab); });
+        tab.addEventListener('keydown', function (e) {
+          var d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+          if (d) selectTab(tabs[(i + d + tabs.length) % tabs.length]);
+        });
+      });
+
+      // Screenshot lightbox.
+      var box = document.getElementById('lightbox');
+      document.querySelectorAll('.zoom').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var img = box.querySelector('img');
+          img.src = b.dataset.src;
+          img.alt = b.querySelector('img').alt;
+          box.showModal();
+        });
+      });
+      box.addEventListener('click', function (e) {
+        if (e.target === box || e.target.classList.contains('close')) box.close();
+      });
+    </script>
+  </body>
+</html>

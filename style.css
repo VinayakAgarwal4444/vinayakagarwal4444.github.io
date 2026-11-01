@@ -196,9 +196,15 @@ main,
   border-top: 1px solid var(--border);
 }
 
+.section > h1,
 .section > h2 {
   font-size: 1.75rem;
   margin-bottom: 1.5rem;
+}
+
+/* A page that opens on a section (no hero) needs no rule above it. */
+main > .section:first-child {
+  border-top: 0;
 }
 
 .section > .lead {
@@ -1832,6 +1838,10 @@ pre code {
     gap: 0.8rem;
   }
   .case-nav a {
+    display: none;
+  }
+  /* No room on a phone; Projects ends with a link to the same page. */
+  .nav-optional {
     display: none;
   }
   .bar .lbl {
